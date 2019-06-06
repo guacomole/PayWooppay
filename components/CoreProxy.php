@@ -14,7 +14,9 @@ class CoreProxy
     const HISTORY_URL = 'https://api.yii2-stage.test.wooppay.com/v1/history';
     const SERVICE_URL = 'https://api.yii2-stage.test.wooppay.com/v1/service';
     const CATEGORY_URL = 'https://api.yii2-stage.test.wooppay.com/v1/service-category';
-    const PAYMENT_URL = 'https://api.yii2-stage.test.wooppay.com/v1/payment/check';
+    const PAYMENT_VALIDATION_URL = 'https://api.yii2-stage.test.wooppay.com/v1/payment/check';
+    const PAYMENT_URL = 'https://api.yii2-stage.test.wooppay.com/v1/payment/create-operation';
+    const GET_CHECK_URL = 'https://api.yii2-stage.test.wooppay.com/v1/history/receipt';
 
     public static function auth($login, $password)
     {
@@ -59,11 +61,23 @@ class CoreProxy
         return $response;
     }
 
-    public static function makePayment($body)
+    public static function PaymentValidate($body)
     {
-        $headers = ['Content-Type' => 'application/json'];
-        $response = RestClient::post(self::PAYMENT_URL, $body, $headers);
+        $headers = ['Authorization' => Yii::$app->session['token'], 'Content-Type' => 'application/json'];
+        $response = RestClient::post(self::PAYMENT_VALIDATION_URL, $body, $headers);
         return $response;
     }
 
+    public static function makePayment($body)
+    {
+        $headers = ['Authorization' => Yii::$app->session['token'], 'Content-Type' => 'application/json'];
+        $response = RestClient::post(self::PAYMENT_URL, $body, $headers);
+        return $response;
+    }
+    public static function getBankCheck($id)
+    {
+        $headers = ['Authorization' => Yii::$app->session['token']];
+        $response = RestClient::get(self::GET_CHECK_URL . '/' . $id , $body = [], $headers);
+        return $response;
+    }
 }

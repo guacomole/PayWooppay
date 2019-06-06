@@ -1,8 +1,6 @@
 <?php
 
-
 namespace app\models;
-
 
 use app\components\CoreProxy;
 use yii\base\DynamicModel;
@@ -33,14 +31,35 @@ class Payment extends DynamicModel
         }
     }
 
-    public function pay($id){
+    public function paymentValidate($id)
+    {
         $body = [];
         $body['service_id'] = $id;
         foreach ($this->names as $attr){
             $body['fields'][$attr] = $this->$attr;
         }
+        $response = CoreProxy::PaymentValidate($body);
+        return json_decode($response->content, true);
+    }
+
+    public function makePayment($id)
+    {
+        $body = $this->paymentValidate($id);
         $response = CoreProxy::makePayment($body);
-        $validation = json_decode($response->content, true);
-        return $validation;
+        $operation_id = json_decode($response->content, true)['operation']['id'];
+        return $operation_id;
+    }
+
+    public function getBankCheck($operation_id)
+    {
+        $response = CoreProxy::getBankCheck($operation_id);
+        return json_decode($response->content, true);
+    }
+
+    public function pay($id)
+    {
+        $operation_id = $this->makePayment($id);
+        $response = $this->getBankCheck($operation_id);
+        return $response;
     }
 }

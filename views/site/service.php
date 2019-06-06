@@ -8,7 +8,6 @@ use yii\helpers\Html;
     $pathAction = Yii::$app->controller->route;
     $pathLink = 'site/payment';
     foreach ($services as $service){
-
         echo
         "<a class=\"btn btn-default service-btn\" href=", Url::to([$pathLink, 'id' => $service['id']], true), ">" .
             "<img src=\"" . $service['picture_url']  . "\"" . "width=\"50\" height=\"50\" hspace=\"30\" alt=\"Картинка\">" .
@@ -19,7 +18,7 @@ use yii\helpers\Html;
     if ($pageCount > 1 and isset($_GET['category_id'])) {
         foreach (range(1, $pageCount) as $page) {
             echo
-            Html::a($page, [$pathAction, 'page' => $page, 'category_id' => $_GET['category_id'] ], ['class' => 'btn btn-default']);
+            Html::a($page, [$pathAction, 'page' => $page, 'category_id' => $_GET['category_id'] ], ['class' => 'btn btn-default page-btn']);
         }
     }
     elseif($pageCount > 1){
