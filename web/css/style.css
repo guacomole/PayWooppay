@@ -1,0 +1,58 @@
+/*input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}*/
+
+input {
+    margin-top: 2px;
+    width: 120px;
+}
+
+input[type=password]{
+    width: 200px;
+}
+
+
+input[type=text]{
+    width: 150px;
+}
+
+input[type=tel]{
+    width: 120px;
+}
+
+input[type=number]{
+    width: 120px;
+}
+
+h1 {
+    text-align: left;
+    margin-bottom: 50px;
+}
+
+.category-btn {
+    margin-left: 3%;
+    margin-right: 3%;
+    margin-top: 50px;
+    padding: 10px;
+    width: 300px;
+    text-align: left;
+}
+
+.service-btn
+{
+    margin-left: 3%;
+    margin-right: 3%;
+    height: 65px;
+    width: 300px;
+    margin-top: 10px;
+    text-align: left;
+}
+
+.page-btn
+{
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-top: 30px;
+}
