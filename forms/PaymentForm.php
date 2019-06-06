@@ -13,6 +13,7 @@ class PaymentForm extends Service
     public $params = [];
     public $labels = [];
     public $fields;
+    public $service_id;
     public $maskPattern;
 
 
@@ -27,7 +28,7 @@ class PaymentForm extends Service
     public function getHtmlRules()
     {
         $fields = $this->fields;
-        foreach ($fields as $field) {  //get params for validation html
+        foreach ($fields as $field) {  //get params for html validation in form
             if ($field['hidden']) continue;
             $this->labels[$field['name']] = $field['title'];
             $this->params[$field['name']] = [];
@@ -59,7 +60,7 @@ class PaymentForm extends Service
         $fields = $this->fields;
         $model = new Payment($this->names, $this->params);
         $model->addRule($this->names, 'trim');
-        foreach ($fields as $field) { //get rules for validation in form
+        foreach ($fields as $field) { //get rules for js validation in form
             if ($field['hidden']) continue;
             foreach ($field['validations'] as $validation) {
                 if ( isset($validation['param']['allowEmpty']) ) unset($validation['param']['allowEmpty']);

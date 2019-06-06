@@ -89,23 +89,28 @@ class SiteController extends Controller
         try{
             $model = new PaymentForm($id);
             $paymentModel = $model->getRules();
-            //return $this->render('inside', compact('model'));
             if ( (Yii::$app->request->isPost) ) {
-                if ($paymentModel->load(Yii::$app->request->post())) {
-                    if ($paymentModel->validate()){
-                        $success = 'УСПЕШНО!';
-                        return $this->render('payment', compact('paymentModel','model', 'success'));
-                    }
-                    else{
-                        $error = $model->errors;
-                        return $this->render('payment', compact('paymentModel','model', 'error'));
+                if ($paymentModel->load(Yii::$app->request->post()) and $paymentModel->validate()) {
+                    $response = $paymentModel->pay($id);
+                    $success = 'УСПЕШНО!';
+                    return $this->render('payment', compact('paymentModel', 'model', 'response', 'success'));
+                }
+                else{
+                    $error = $model->errors;
+                    return $this->render('payment', compact('paymentModel','model', 'error'));
                     }
                 }
-            }
             return $this->render('payment', compact('paymentModel','model'));
-        } catch(ServerErrorHttpException $e) {
-            Yii::$app->session['error'] = json_decode($e->getMessage(), true);
-            return $this->redirect(Url::to(['/site/auth']));
+        } catch(ServerErrorHttpException $e) {              //создать модель для обработки месседжей ошибок
+            $error = json_decode($e->getMessage(), true);
+            if( isset($error['status']) and $error['status'] == 401) {
+                $session['error'] = $e->getMessage();
+                return $this->redirect(Url::to(['/site/auth']));
+            }
+            else{
+                Yii::$app->session->setFlash('error', $error);
+                return $this->render('payment', compact('paymentModel','model'));
+            }
         } catch (Exception $e) {
             $session['error'] = $e->getMessage();
             return $this->redirect(Url::to(['/site/auth']), compact('model'));

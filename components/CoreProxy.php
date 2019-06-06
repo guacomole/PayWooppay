@@ -4,18 +4,17 @@
 namespace app\components;
 
 
-use app\components\RestClient;
 use http\Client;
 use Yii;
 use yii\helpers\Url;
 
 class CoreProxy
 {
-    const API_URL = 'https://api.yii2-stage.test.wooppay.com/v1/';
     const AUTH_URL = 'https://api.yii2-stage.test.wooppay.com/v1/auth';
     const HISTORY_URL = 'https://api.yii2-stage.test.wooppay.com/v1/history';
     const SERVICE_URL = 'https://api.yii2-stage.test.wooppay.com/v1/service';
     const CATEGORY_URL = 'https://api.yii2-stage.test.wooppay.com/v1/service-category';
+    const PAYMENT_URL = 'https://api.yii2-stage.test.wooppay.com/v1/payment/check';
 
     public static function auth($login, $password)
     {
@@ -27,19 +26,6 @@ class CoreProxy
         return $response;
     }
 
-    public static function profileInfo()
-    {
-        $headers = ['Authorization' => Yii::$app->session['token']];
-        $response = RestClient::get(self::AUTH_URL, $body = [], $headers);
-        return $response;
-    }
-
-    public static function getHistory()
-    {
-        $headers = ['Authorization' => Yii::$app->session['token']];
-        $response = RestClient::get(self::HISTORY_URL, $body = [], $headers);
-        return $response;
-    }
 
     public static function getService($page, $id, $category_id)
     {
@@ -70,6 +56,13 @@ class CoreProxy
     {
         $url = substr(Url::to([self::CATEGORY_URL, 'parent_id' => $parentId]), 1);
         $response = RestClient::get($url, $body =[]);
+        return $response;
+    }
+
+    public static function makePayment($body)
+    {
+        $headers = ['Content-Type' => 'application/json'];
+        $response = RestClient::post(self::PAYMENT_URL, $body, $headers);
         return $response;
     }
 
