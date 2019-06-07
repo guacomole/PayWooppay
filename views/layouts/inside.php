@@ -21,8 +21,8 @@ AppAsset::register($this);
 <div class="wrap">
     <div class="container">
         <ul class="nav nav-pills">
-            <li role="presentation"><?= Html::a('Список сервисов', ['site/service']) ?></li>
-            <li role="presentation"><?= Html::a('Список категорий', ['site/category']) ?></li>
+            <li role="presentation"><?= Html::a('Список сервисов', ['service']) ?></li>
+            <li role="presentation"><?= Html::a('Список категорий', ['category']) ?></li>
         </ul>
         <?= $content ?>
     </div>

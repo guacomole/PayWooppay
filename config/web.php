@@ -55,13 +55,12 @@ $config = [
 
         'urlManager' => [
             'enablePrettyUrl' => true,
-            //'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
                     'auth' => 'site/auth',
-                    'category' => 'site/category',
-                    'service' => 'site/service',
-                    'payment' => 'site/payment'
+                    'category' => 'payment/category',
+                    'service' => 'payment/service',
+                    'payment' => 'payment/payment'
             ],
         ],
 
