@@ -6,6 +6,8 @@ namespace app\forms;
 use app\models\Service;
 use Yii;
 use app\models\Payment;
+use yii\httpclient\Exception;
+use yii\web\ServerErrorHttpException;
 
 class PaymentForm extends Service
 {
@@ -13,16 +15,20 @@ class PaymentForm extends Service
     public $params = [];
     public $labels = [];
     public $fields;
-    public $service_id;
-    public $maskPattern;
+    public $forMaskPattern;
 
 
     public function __construct($id)
     {
-        $this->fields = $this->find(null, $id)['fields'];
-        $this->getHtmlRules();
-        $this->getRules();
-        return $this;
+        try{
+            $this->fields = $this->find(null, $id)['fields'];
+            $this->getHtmlRules();
+            $this->getRules();
+            return $this;
+        }
+        catch (Exception $e) {
+            throw new ServerErrorHttpException('Непредвиденные технические проблемы.');
+        }
     }
 
     public function getHtmlRules()
@@ -67,7 +73,8 @@ class PaymentForm extends Service
                 if ( $validation['type'] == 'length' ) {
                     $model->addRule($field['name'], $field['type'], [$validation['type'] => $validation['param']]);
                 } elseif(isset($this->params[$field['name']]['mask']) and isset($validation['param']['pattern'])){
-                    $model->addRule($field['name'], $validation['type'], $validation['param']);
+                    $this->forMaskPattern = $validation['param']['pattern'];
+                    $model->addRule($field['name'], $validation['type'], ['pattern' => '/' . '^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$' . '/']);//$validation['param']);
                 } elseif ($validation['type'] == 'numerical') {
                     $model->addRule($field['name'], 'integer', $validation['param']);
                 }  else {

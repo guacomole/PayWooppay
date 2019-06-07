@@ -60,7 +60,8 @@ $config = [
             'rules' => [
                     'auth' => 'site/auth',
                     'category' => 'site/category',
-                    'service' => 'site/service'
+                    'service' => 'site/service',
+                    'payment' => 'site/payment'
             ],
         ],
 

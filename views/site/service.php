@@ -6,7 +6,7 @@ use yii\helpers\Html;
 <?php if ( (true) ): ?>
     <?php
     $pathAction = Yii::$app->controller->route;
-    $pathLink = 'site/payment';
+    $pathLink = 'payment';
     foreach ($services as $service){
         echo
         "<a class=\"btn btn-default service-btn\" href=", Url::to([$pathLink, 'id' => $service['id']], true), ">" .
