@@ -54,20 +54,20 @@ class PaymentController extends Controller
     {
         Yii::$app->session['idPayment'] = $id;
         try{
-            $model = new PaymentForm($id);
-            $paymentModel = $model->getRules();
+            $paymentModel = new PaymentForm($id);
+            $paymentModel = $paymentModel->getRules();
             if ( (Yii::$app->request->isPost) ) {
                 if ($paymentModel->load(Yii::$app->request->post()) and $paymentModel->validate()) {
                     $response = $paymentModel->pay($id); // 11 status - new op, 14 stat - vse horowo,
                     $success = 'УСПЕШНО!';
-                    return $this->render('payment', compact('paymentModel', 'model', 'response', 'success'));
+                    return $this->render('payment', compact('paymentModel', 'response', 'success'));
                 }
                 else{
-                    $error = $model->errors;
-                    return $this->render('payment', compact('paymentModel','model', 'error'));
+                    $error = $paymentModel->errors;
+                    return $this->render('payment', compact('paymentModel', 'error'));
                 }
             }
-            return $this->render('payment', compact('paymentModel','model'));
+            return $this->render('payment', compact('paymentModel'));
         } catch(ServerErrorHttpException $e) {              //создать модель для обработки месседжей ошибок
             $error = json_decode($e->getMessage(), true);
             if( isset($error['status']) and $error['status'] == 401) {
@@ -76,7 +76,7 @@ class PaymentController extends Controller
             }
             else{
                 Yii::$app->session->setFlash('error', $error);
-                return $this->render('payment', compact('paymentModel','model'));
+                return $this->render('payment', compact('paymentModel'));
             }
         } catch (Exception $e) {
             $session['error'] = $e->getMessage();

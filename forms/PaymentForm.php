@@ -11,9 +11,9 @@ use yii\web\ServerErrorHttpException;
 
 class PaymentForm extends Service
 {
-    public $names = [];
-    public $params = [];
-    public $labels = [];
+    public $attrs = []; //программные названия полей, будущие атрибуты динамической модели
+    public $params = []; //ассоциативный массив, $attr => html код для превалидации
+    public $labels = []; //клиентские названия полей
 
     public function __construct($id)
     {
@@ -21,7 +21,6 @@ class PaymentForm extends Service
             $service = $this->find(null, $id);
             parent::__construct($service->id, $service->title, $service->picture_url, $service->fields);
             $this->getHtmlRules();
-            //$this->getRules();
             return $this;
         }
         catch (Exception $e) {
@@ -42,7 +41,7 @@ class PaymentForm extends Service
             if ($field['type'] == 'amount' or $field['name'] == 'amount') {
                 $this->params[$field['name']]['type'] = 'number';
             }
-            array_push($this->names, $field['name']);
+            array_push($this->attrs, $field['name']);
             foreach ($field['validations'] as $validation) {
                 if (isset($validation['param']['pattern'])){
                     $validation['param']['pattern'] = substr($validation['param']['pattern'], 1,-1);
@@ -62,8 +61,8 @@ class PaymentForm extends Service
     public function getRules()
     {
         $fields = $this->fields;
-        $model = new Payment($this->names, $this->params);
-        $model->addRule($this->names, 'trim');
+        $model = new Payment($this->attrs, $this->params, $this->labels);
+        $model->addRule($this->attrs, 'trim');
         foreach ($fields as $field) { //get rules for js validation in form
             if ($field['hidden']) continue;
             foreach ($field['validations'] as $validation) {

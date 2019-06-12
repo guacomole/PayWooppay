@@ -12,18 +12,18 @@ use yii\helpers\Url;
     if (isset($success)) echo $success;
 
     $form = ActiveForm::begin(['options' => ['id' => 'PaymentForm'], 'action' => [ Url::to(['payment', 'id' => Yii::$app->session['idPayment']]) ]]);
-    foreach($model->names as $name)
+    foreach($paymentModel->attrs as $name)
     {
-        if ( isset($model->params[$name]['mask']) ){
+        if ( isset($paymentModel->params[$name]['mask']) ){
             echo $form->field($paymentModel, $name)->widget(MaskedInput::class, [
-               'mask' => $model->params[$name]['mask'],
-            ])->label($model->labels[$name]);
+               'mask' => $paymentModel->params[$name]['mask'],
+            ])->label($paymentModel->labels[$name]);
         }
-        elseif ( isset($model->params[$name]) ){
-            echo $form->field($paymentModel, $name)->textInput($model->params[$name])->label($model->labels[$name]);
+        elseif ( isset($paymentModel->params[$name]) ){
+            echo $form->field($paymentModel, $name)->textInput($paymentModel->params[$name])->label($paymentModel->labels[$name]);
 
         }else{
-            echo $form->field($paymentModel, $name)->label($model->labels[$name]);
+            echo $form->field($paymentModel, $name)->label($paymentModel->labels[$name]);
         }
 
     }

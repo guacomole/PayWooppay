@@ -7,20 +7,22 @@ use yii\base\DynamicModel;
 
 class Payment extends DynamicModel
 {
-    public $names;
+    public $attrs;
     public $params;
-    public function __construct(array $names, array $params, array $labels)
+    public $labels;
+    public function __construct(array $attrs, array $params, array $labels)
     {
         $this->params = $params; // два атрибута для очистки маски в beforeValidate
-        $this->names = $names;
-        parent::__construct($names); //создание динамической модели
+        $this->attrs = $attrs;
+        $this->labels = $labels;
+        parent::__construct($attrs); //создание динамической модели
     }
 
     public function beforeValidate()
     {
         if (parent::beforeValidate()) {
-            foreach ($this->names as $name) {
-                if ( isset($this->params[$name]['mask']) ) {
+            foreach ($this->attrs as $attr) {
+                if ( isset($this->params[$attr]['mask']) ) {
                     $this->$name = substr(preg_replace("/[^0-9,.]/", "", $this->$name), 1);
                 }
             }
@@ -35,7 +37,7 @@ class Payment extends DynamicModel
     {
         $body = [];
         $body['service_id'] = $id;
-        foreach ($this->names as $attr){
+        foreach ($this->attrs as $attr){
             $body['fields'][$attr] = $this->$attr;
         }
         $response = CoreProxy::PaymentValidate($body);

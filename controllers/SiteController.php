@@ -39,10 +39,7 @@ class SiteController extends Controller
             }else {
                 $session['error'] = $model->errors;
             }
-
         }
-
         return $this->render('auth', compact('model'));
     }
-
 }
