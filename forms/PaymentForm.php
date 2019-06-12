@@ -14,16 +14,14 @@ class PaymentForm extends Service
     public $names = [];
     public $params = [];
     public $labels = [];
-    public $fields;
-    public $forMaskPattern;
-
 
     public function __construct($id)
     {
         try{
-            $this->fields = $this->find(null, $id)['fields'];
+            $service = $this->find(null, $id);
+            parent::__construct($service->id, $service->title, $service->picture_url, $service->fields);
             $this->getHtmlRules();
-            $this->getRules();
+            //$this->getRules();
             return $this;
         }
         catch (Exception $e) {
@@ -73,8 +71,7 @@ class PaymentForm extends Service
                 if ( $validation['type'] == 'length' ) {
                     $model->addRule($field['name'], $field['type'], [$validation['type'] => $validation['param']]);
                 } elseif(isset($this->params[$field['name']]['mask']) and isset($validation['param']['pattern'])){
-                    $this->forMaskPattern = $validation['param']['pattern'];
-                    $model->addRule($field['name'], $validation['type'], ['pattern' => '/' . '^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$' . '/']);//$validation['param']);
+                    $model->addRule($field['name'], $validation['type'], ['pattern' => '/' . '^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$' . '/']);
                 } elseif ($validation['type'] == 'numerical') {
                     $model->addRule($field['name'], 'integer', $validation['param']);
                 }  else {

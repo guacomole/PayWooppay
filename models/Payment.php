@@ -9,11 +9,11 @@ class Payment extends DynamicModel
 {
     public $names;
     public $params;
-    public function __construct(array $names, array $params)
+    public function __construct(array $names, array $params, array $labels)
     {
-        $this->params = $params;
+        $this->params = $params; // два атрибута для очистки маски в beforeValidate
         $this->names = $names;
-        parent::__construct($names);
+        parent::__construct($names); //создание динамической модели
     }
 
     public function beforeValidate()

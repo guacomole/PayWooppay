@@ -15,7 +15,7 @@ class CoreProxy
     const SERVICE_URL = 'https://api.yii2-stage.test.wooppay.com/v1/service';
     const CATEGORY_URL = 'https://api.yii2-stage.test.wooppay.com/v1/service-category';
     const PAYMENT_VALIDATION_URL = 'https://api.yii2-stage.test.wooppay.com/v1/payment/check';
-    const PAYMENT_URL = 'https://api.yii2-stage.test.wooppay.com/v1/payment/create-operation';
+    const PAYMENT_URL = 'https://api.yii2-stage.test.wooppay.com/v1/payment/pay-from-wallet';
     const GET_CHECK_URL = 'https://api.yii2-stage.test.wooppay.com/v1/history/receipt';
 
     public static function auth($login, $password)

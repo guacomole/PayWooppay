@@ -10,8 +10,8 @@ use yii\helpers\Url;
         debug(Yii::$app->session->getFlash('error'));
     }
     if (isset($success)) echo $success;
-    $form = ActiveForm::begin(['options' => ['id' => 'PaymentForm'], 'action' => [ Url::to(['payment', 'id' => Yii::$app->session['idPayment']]) ]]);
 
+    $form = ActiveForm::begin(['options' => ['id' => 'PaymentForm'], 'action' => [ Url::to(['payment', 'id' => Yii::$app->session['idPayment']]) ]]);
     foreach($model->names as $name)
     {
         if ( isset($model->params[$name]['mask']) ){

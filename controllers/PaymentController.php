@@ -22,8 +22,8 @@ class PaymentController extends Controller
     {
         try{
             $categoryModel = new Category();
-            $categoryModel->find();
-            return $this->render('category', compact( 'categoryModel') );
+            $categories = $categoryModel->find();
+            return $this->render('category', compact( 'categories') );
 
         }catch(ServerErrorHttpException $e) {
             Yii::$app->session['error'] = json_decode($e->getMessage(), true);
@@ -58,7 +58,7 @@ class PaymentController extends Controller
             $paymentModel = $model->getRules();
             if ( (Yii::$app->request->isPost) ) {
                 if ($paymentModel->load(Yii::$app->request->post()) and $paymentModel->validate()) {
-                    $response = $paymentModel->pay($id);
+                    $response = $paymentModel->pay($id); // 11 status - new op, 14 stat - vse horowo,
                     $success = 'УСПЕШНО!';
                     return $this->render('payment', compact('paymentModel', 'model', 'response', 'success'));
                 }
