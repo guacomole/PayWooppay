@@ -27,8 +27,10 @@ class Service extends Category
             $response = json_decode($response->content, true);
             $services = [];
             foreach ($response as $service) {
-                $service = new Service($service['id'], $service['title'], $service['picture_url']);
-                array_push($services, $service);
+                if ($service['is_simple']) {
+                    $service = new Service($service['id'], $service['title'], $service['picture_url']);
+                    array_push($services, $service);
+                }
             }
             return $services;
         }

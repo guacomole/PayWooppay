@@ -23,7 +23,7 @@ class Payment extends DynamicModel
         if (parent::beforeValidate()) {
             foreach ($this->attrs as $attr) {
                 if ( isset($this->params[$attr]['mask']) ) {
-                    $this->$name = substr(preg_replace("/[^0-9,.]/", "", $this->$name), 1);
+                    $this->$attr = substr(preg_replace("/[^0-9,.]/", "", $this->$attr), 1);
                 }
             }
             return true;
@@ -52,16 +52,10 @@ class Payment extends DynamicModel
         return $operation_id;
     }
 
-    public function getBankCheck($operation_id)
-    {
-        $response = CoreProxy::getBankCheck($operation_id);
-        return json_decode($response->content, true);
-    }
-
     public function pay($id)
     {
         $operation_id = $this->makePayment($id);
-        $response = $this->getBankCheck($operation_id);
-        return $response;
+        $check = new Check($operation_id);
+        return $check;
     }
 }

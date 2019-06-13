@@ -5,6 +5,8 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 ?>
 
+<?php if ( true ): ?>
+
 <?php
     if ( Yii::$app->session->hasFlash('error') ){
         debug(Yii::$app->session->getFlash('error'));
@@ -33,3 +35,4 @@ use yii\helpers\Url;
         debug($paymentModel);
     ?>
 
+<?php endif; ?>

@@ -4,6 +4,7 @@ use yii\helpers\Html;
 
 <?php if ( true ): ?>
     <?php
+    debug(Yii::$app->session['token']);
     $pathAction = Yii::$app->controller->route;
     $pathLink = 'service';
     foreach ($categories as $category){

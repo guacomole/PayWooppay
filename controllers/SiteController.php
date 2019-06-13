@@ -3,16 +3,11 @@
 
 namespace app\controllers;
 
-
-
 use app\forms\LoginForm;
 use yii\httpclient\Exception;
 use yii\web\Controller;
 use Yii;
 use yii\web\ServerErrorHttpException;
-
-
-
 
 class SiteController extends Controller
 {

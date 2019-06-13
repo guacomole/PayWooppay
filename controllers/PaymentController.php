@@ -58,9 +58,9 @@ class PaymentController extends Controller
             $paymentModel = $paymentModel->getRules();
             if ( (Yii::$app->request->isPost) ) {
                 if ($paymentModel->load(Yii::$app->request->post()) and $paymentModel->validate()) {
-                    $response = $paymentModel->pay($id); // 11 status - new op, 14 stat - vse horowo,
+                    $check = $paymentModel->pay($id); // 11 status - new op, 14 stat - vse horowo,
                     $success = 'УСПЕШНО!';
-                    return $this->render('payment', compact('paymentModel', 'response', 'success'));
+                    return $this->render('check', compact('check', 'success'));
                 }
                 else{
                     $error = $paymentModel->errors;
