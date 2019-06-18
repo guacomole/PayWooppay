@@ -4,7 +4,6 @@
 namespace app\controllers;
 
 use yii\base\UnknownPropertyException;
-use yii\web\Controller;
 use app\forms\PaymentForm;
 use app\models\Category;
 use app\models\Service;
@@ -13,7 +12,7 @@ use yii\helpers\Url;
 use yii\httpclient\Exception;
 use yii\web\ServerErrorHttpException;
 
-class PaymentController extends Controller
+class PaymentController extends BehaviorsController
 {
     public $layout = 'inside';
     /**

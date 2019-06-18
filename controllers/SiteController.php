@@ -4,12 +4,12 @@
 namespace app\controllers;
 
 use app\forms\LoginForm;
+use yii\helpers\Url;
 use yii\httpclient\Exception;
-use yii\web\Controller;
 use Yii;
 use yii\web\ServerErrorHttpException;
 
-class SiteController extends Controller
+class SiteController extends BehaviorsController
 {
     public $layout = 'inside';
 
@@ -36,5 +36,11 @@ class SiteController extends Controller
             }
         }
         return $this->render('auth', compact('model'));
+    }
+
+    public function actionLogout()
+    {
+        Yii::$app->session->destroy();
+        return $this->redirect(Url::to(['auth']));
     }
 }

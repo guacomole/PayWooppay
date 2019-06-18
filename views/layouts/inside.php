@@ -23,8 +23,9 @@ AppAsset::register($this);
         <ul class="nav nav-pills" >
             <li role="presentation"><?= Html::a('Список сервисов', ['service']) ?></li>
             <li role="presentation"><?= Html::a('Список категорий', ['category']) ?></li>
-            <h4 style="text-align:right"> Ваш номер:  <?php echo Yii::$app->session['phone']; ?></h4>
         </ul>
+        <?= Html::a('Выйти', ['site/logout'], ['class' => 'btn btn-danger']) ?>
+        <h4 style="text-align:right"> Ваш номер:  <?php echo Yii::$app->session['phone']; ?></h4>
         <?= $content ?>
     </div>
 </div>

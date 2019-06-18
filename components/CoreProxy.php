@@ -30,6 +30,12 @@ class CoreProxy
         return $response;
     }
 
+    public static function isAuth()
+    {
+        $headers = ['Authorization' => Yii::$app->session['token']];
+        $response = RestClient::get(self::AUTH_URL, $body = [], $headers);
+        return $response;
+    }
 
     public static function getService($page, $id, $category_id)
     {
@@ -82,7 +88,7 @@ class CoreProxy
         $response = RestClient::get(self::GET_CHECK_URL . '/' . $id , $body = [], $headers);
         return $response;
     }
-    public static function getCheckOnPrint($id)
+    public static function getCheckInPDF($id)
     {
         $headers = ['Authorization' => Yii::$app->session['token'],];
         $response = RestClient::get(self::PRINT_CHECK_URL . '/' . $id , $body = [], $headers);

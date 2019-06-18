@@ -8,9 +8,6 @@ use app\components\CoreProxy;
 class Service extends Category
 {
     public $pageCount;
-    public $id;
-    public $title;
-    public $picture_url;
     public $fields;
 
     public function __construct($id=null, $title=null, $picture_url=null, $fields=null)
@@ -41,5 +38,4 @@ class Service extends Category
             return $service;
         }
     }
-
 }

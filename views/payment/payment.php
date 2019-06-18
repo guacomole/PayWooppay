@@ -30,7 +30,7 @@ use yii\helpers\Url;
         }
 
     }
-        echo Html::submitButton('Submit', ['class' => 'btn btn-primary']);
+        echo Html::submitButton('Оплатить', ['class' => 'btn btn-primary']);
         ActiveForm::end();
         if (isset($response)) debug($response);
         debug($paymentModel);

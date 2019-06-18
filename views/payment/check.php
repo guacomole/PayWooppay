@@ -1,5 +1,5 @@
 <?php
-file_put_contents('check.pdf', $check->checkOnPrint->content);
+file_put_contents('check.pdf', $check->checkInPDF);
 ?>
 <label for="showCheckBtn" class="btn btn-default btn-info">Показать чек</label>
 <input type="checkbox" id="showCheckBtn">
