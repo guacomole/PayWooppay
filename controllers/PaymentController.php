@@ -3,6 +3,7 @@
 
 namespace app\controllers;
 
+use yii\base\UnknownPropertyException;
 use yii\web\Controller;
 use app\forms\PaymentForm;
 use app\models\Category;
@@ -20,6 +21,7 @@ class PaymentController extends Controller
      */
     public function actionCategory()
     {
+        $this->view->title = 'Категории';
         try{
             $categoryModel = new Category();
             $categories = $categoryModel->find();
@@ -37,7 +39,7 @@ class PaymentController extends Controller
      */
     public function actionService($page = null, $category_id=null)
     {
-
+        $this->view->title = 'Сервисы';
         try{
             $serviceModel = new Service();
             $services = $serviceModel->find($page, null, $category_id);
@@ -52,6 +54,7 @@ class PaymentController extends Controller
 
     public function actionPayment($id)
     {
+        $this->view->title = 'Оплата';
         Yii::$app->session['idPayment'] = $id;
         try{
             $paymentModel = new PaymentForm($id);
@@ -59,28 +62,30 @@ class PaymentController extends Controller
             if ( (Yii::$app->request->isPost) ) {
                 if ($paymentModel->load(Yii::$app->request->post()) and $paymentModel->validate()) {
                     $check = $paymentModel->pay($id); // 11 status - new op, 14 stat - vse horowo,
-                    $success = 'УСПЕШНО!';
-                    return $this->render('check', compact('check', 'success'));
+                    return $this->render('check', compact('check'));
                 }
                 else{
-                    $error = $paymentModel->errors;
-                    return $this->render('payment', compact('paymentModel', 'error'));
+                    Yii::$app->session->setFlash('error', 'Ошибка данных.');
                 }
             }
             return $this->render('payment', compact('paymentModel'));
-        } catch(ServerErrorHttpException $e) {              //создать модель для обработки месседжей ошибок
+        }
+        catch(ServerErrorHttpException $e) {
             $error = json_decode($e->getMessage(), true);
-            if( isset($error['status']) and $error['status'] == 401) {
-                $session['error'] = $e->getMessage();
-                return $this->redirect(Url::to(['/site/auth']));
-            }
-            else{
+            if (isset($error['status']) and $error['status'] == 401) {
                 Yii::$app->session->setFlash('error', $error);
+                return $this->redirect(Url::to(['/site/auth']));
+            } elseif (isset($error[0]['field']) and isset($error[0]['message']) and $error[0]['field'] != 'fields') {
+                $paymentModel->addError($error[0]['field'], $error[0]['message']);
                 return $this->render('payment', compact('paymentModel'));
             }
+        } catch (UnknownPropertyException $e){
+            Yii::$app->session->setFlash('error', $e->getMessage() );
+            return $this->render('payment');
+
         } catch (Exception $e) {
             $session['error'] = $e->getMessage();
-            return $this->redirect(Url::to(['/site/auth']), compact('model'));
+            return $this->redirect(Url::to(['/site/auth']));
         }
     }
 }

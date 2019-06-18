@@ -20,9 +20,10 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 <div class="wrap">
     <div class="container">
-        <ul class="nav nav-pills">
+        <ul class="nav nav-pills" >
             <li role="presentation"><?= Html::a('Список сервисов', ['service']) ?></li>
             <li role="presentation"><?= Html::a('Список категорий', ['category']) ?></li>
+            <h4 style="text-align:right"> Ваш номер:  <?php echo Yii::$app->session['phone']; ?></h4>
         </ul>
         <?= $content ?>
     </div>

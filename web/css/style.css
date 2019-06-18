@@ -56,3 +56,24 @@ h1 {
     margin-right: 2px;
     margin-top: 30px;
 }
+
+.text,
+input[type="checkbox"] {
+    display: none;
+    background-color: #ffffff;
+    width: 350px;
+}
+
+input[type="checkbox"]:checked ~ .text {
+    display: block;
+}
+
+/* Стилизация псевдокнопки */
+.pseudo-btn {
+    display: inline-block;
+    margin-bottom: 4px;
+    padding: 4px 8px;
+    background-color: #ffffff;
+    border: 1px solid #eeeeee;
+    cursor: pointer;
+}

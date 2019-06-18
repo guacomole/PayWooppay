@@ -38,13 +38,12 @@ class RestClient
         try{
             $response = $request -> send();
         } catch (Exception $e){
-            throw new ServerErrorHttpException('Непредвиденные технические проблемы');
+            throw new ServerErrorHttpException('Непредвиденные технические проблемы. Пожалуйста, попробуйте позже.');
         }
 
         if( !$response->isOk ){
             throw new ServerErrorHttpException($response->content);
         }
         return $response;
-
     }
 }

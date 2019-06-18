@@ -4,7 +4,7 @@
 namespace app\forms;
 
 use app\models\Service;
-use Yii;
+use yii\base\UnknownPropertyException;
 use app\models\Payment;
 use yii\httpclient\Exception;
 use yii\web\ServerErrorHttpException;
@@ -61,22 +61,27 @@ class PaymentForm extends Service
     public function getRules()
     {
         $fields = $this->fields;
+        try {
         $model = new Payment($this->attrs, $this->params, $this->labels);
         $model->addRule($this->attrs, 'trim');
-        foreach ($fields as $field) { //get rules for js validation in form
-            if ($field['hidden']) continue;
-            foreach ($field['validations'] as $validation) {
-                if ( isset($validation['param']['allowEmpty']) ) unset($validation['param']['allowEmpty']);
-                if ( $validation['type'] == 'length' ) {
-                    $model->addRule($field['name'], $field['type'], [$validation['type'] => $validation['param']]);
-                } elseif(isset($this->params[$field['name']]['mask']) and isset($validation['param']['pattern'])){
-                    $model->addRule($field['name'], $validation['type'], ['pattern' => '/' . '^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$' . '/']);
-                } elseif ($validation['type'] == 'numerical') {
-                    $model->addRule($field['name'], 'integer', $validation['param']);
-                }  else {
-                    $model->addRule($field['name'], $validation['type'], $validation['param']);
+            foreach ($fields as $field) { //get rules for js validation in form
+                if ($field['hidden']) continue;
+                foreach ($field['validations'] as $validation) {
+                    if (isset($validation['param']['allowEmpty'])) unset($validation['param']['allowEmpty']);
+                    if ($validation['type'] == 'length') {
+                        $model->addRule($field['name'], $field['type'], [$validation['type'] => $validation['param']]);
+                    } elseif (isset($this->params[$field['name']]['mask']) and isset($validation['param']['pattern'])) {
+                        $model->addRule($field['name'], $validation['type'], ['pattern' => '/' . '^((8|7|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$' . '/']);
+                    } elseif ($validation['type'] == 'numerical') {
+                        $model->addRule($field['name'], 'integer', $validation['param']);
+                    } else {
+                        $model->addRule($field['name'], $validation['type'], $validation['param']);
+                    }
                 }
             }
+        }
+        catch (UnknownPropertyException $e){
+            throw new UnknownPropertyException('Невозможно отобразить сервис.');
         }
         return $model;
     }

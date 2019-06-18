@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\components\CoreProxy;
 use yii\base\DynamicModel;
+use yii\web\ServerErrorHttpException;
 
 class Payment extends DynamicModel
 {
@@ -55,7 +56,14 @@ class Payment extends DynamicModel
     public function pay($id)
     {
         $operation_id = $this->makePayment($id);
-        $check = new Check($operation_id);
+        try {
+            $check = new Check($operation_id);
+        }
+        catch (ServerErrorHttpException $e) {
+            sleep(3);
+            $operation_id = $this->makePayment($id);
+            $check = new Check($operation_id);
+        }
         return $check;
     }
 }

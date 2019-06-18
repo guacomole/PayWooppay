@@ -33,6 +33,7 @@ class LoginForm extends Model
     public function login()
     {
         $response = CoreProxy::auth($this->phone, $this->password);
+        Yii::$app->session['phone'] = $this->phone;
         Yii::$app->session['token'] = substr(json_decode($response->content, true)['token'], 7);
 
     }

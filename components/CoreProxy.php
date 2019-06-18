@@ -7,6 +7,7 @@ namespace app\components;
 use http\Client;
 use Yii;
 use yii\helpers\Url;
+use yii\web\ServerErrorHttpException;
 
 class CoreProxy
 {
@@ -17,6 +18,7 @@ class CoreProxy
     const PAYMENT_VALIDATION_URL = 'https://api.yii2-stage.test.wooppay.com/v1/payment/check';
     const PAYMENT_URL = 'https://api.yii2-stage.test.wooppay.com/v1/payment/pay-from-wallet';
     const GET_CHECK_URL = 'https://api.yii2-stage.test.wooppay.com/v1/history/receipt';
+    const PRINT_CHECK_URL = 'https://api.yii2-stage.test.wooppay.com/v1/history/receipt/pdf';
 
     public static function auth($login, $password)
     {
@@ -78,6 +80,12 @@ class CoreProxy
     {
         $headers = ['Authorization' => Yii::$app->session['token']];
         $response = RestClient::get(self::GET_CHECK_URL . '/' . $id , $body = [], $headers);
+        return $response;
+    }
+    public static function getCheckOnPrint($id)
+    {
+        $headers = ['Authorization' => Yii::$app->session['token'],];
+        $response = RestClient::get(self::PRINT_CHECK_URL . '/' . $id , $body = [], $headers);
         return $response;
     }
 }
