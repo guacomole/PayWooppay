@@ -5,36 +5,43 @@ namespace app\forms;
 use app\components\CoreProxy;
 use yii\base\Model;
 use Yii;
+use yii\web\UnprocessableEntityHttpException;
 
 class LoginForm extends Model
 {
-    public $phone;
+    public $login;
     public $password;
 
-    public function attributeLabels()  # к каждому атрибуту формы соответствует своё название в виде
+    public function attributeLabels()
     {
         return [
-            'phone' => 'Номер телефона',
+            'login' => 'Номер телефона',
             'password' => 'Пароль'
         ];
     }
 
-    public function rules()  # правила валидации
+    public function rules()
     {
         return [
-                [ ['phone','password'], 'required'],
-                [ ['phone', 'password'], 'trim'],
-                ['phone', 'string', 'length' => 11],
-                [ 'phone', 'match', 'pattern' => '/^7\\d{10}$/'],///'/^\+?7(\d{3})(\d{3})(\d{4})$/'],
+                [ ['login','password'], 'required'],
+                [ ['login', 'password'], 'trim'],
+                [ ['login', 'password'], 'login'],
+                //['password', 'length', ['length' => 20]],
+                [ 'login', 'match', 'pattern' => '/^((8|7|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/'],
                 ['password', 'match', 'pattern' => '/^\S*(?=\S{9,20})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])\S*$/'],
         ];
     }
 
     public function login()
     {
-        $response = CoreProxy::auth($this->phone, $this->password);
-        Yii::$app->session['phone'] = $this->phone;
-        Yii::$app->session['token'] = substr(json_decode($response->content, true)['token'], 7);
-
+        $this->login = substr(preg_replace("/[^0-9,.]/", "", $this->login), 0);
+        try {
+            $response = CoreProxy::auth($this->login, $this->password);
+            Yii::$app->session['phone'] = $this->login;
+            Yii::$app->session['token'] = substr(json_decode($response->content, true)['token'], 7);
+        }
+        catch (UnprocessableEntityHttpException $e) {
+            $this->addErrors(['login' => 'Неверный номер телефона или пароль', 'password' => 'Неверный номер телефона или пароль']);
+        }
     }
 }

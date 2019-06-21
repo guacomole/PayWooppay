@@ -4,6 +4,7 @@
 namespace app\forms;
 
 use app\models\Service;
+use yii\base\ErrorException;
 use yii\base\UnknownPropertyException;
 use app\models\Payment;
 use yii\httpclient\Exception;
@@ -31,30 +32,35 @@ class PaymentForm extends Service
     public function getHtmlRules()
     {
         $fields = $this->fields;
-        foreach ($fields as $field) {  //get params for html validation in form
-            if ($field['hidden']) continue;
-            $this->labels[$field['name']] = $field['title'];
-            $this->params[$field['name']] = [];
-            if ($field['mask']) {
-                $this->params[$field['name']]['mask'] = $field['mask'];
-            }
-            if ($field['type'] == 'amount' or $field['name'] == 'amount') {
-                $this->params[$field['name']]['type'] = 'number';
-            }
-            array_push($this->attrs, $field['name']);
-            foreach ($field['validations'] as $validation) {
-                if (isset($validation['param']['pattern'])){
-                    $validation['param']['pattern'] = substr($validation['param']['pattern'], 1,-1);
+        try {
+            foreach ($fields as $field) {  //get params for html validation in form
+                if ($field['hidden']) continue;
+                $this->labels[$field['name']] = $field['title'];
+                $this->params[$field['name']] = [];
+                if ($field['mask']) {
+                    $this->params[$field['name']]['mask'] = $field['mask'];
                 }
-                if ( isset($validation['param']['allowEmpty']) ) {
-                    unset($validation['param']['allowEmpty']);
+                if ($field['type'] == 'amount' or $field['name'] == 'amount') {
+                    $this->params[$field['name']]['type'] = 'number';
                 }
-                $this->params[$field['name']] = array_merge($this->params[$field['name']], $validation['param']);
+                array_push($this->attrs, $field['name']);
+                foreach ($field['validations'] as $validation) {
+                    if (isset($validation['param']['pattern'])) {
+                        $validation['param']['pattern'] = substr($validation['param']['pattern'], 1, -1);
+                    }
+                    if (isset($validation['param']['allowEmpty'])) {
+                        unset($validation['param']['allowEmpty']);
+                    }
+                    $this->params[$field['name']] = array_merge($this->params[$field['name']], $validation['param']);
+                }
+                if (!isset($this->params[$field['name']]['type']) and isset($this->params[$field['name']]['max'])) {
+                    $this->params[$field['name']]['maxlength'] = $this->params[$field['name']]['max'];
+                    unset($this->params[$field['name']]['max']);
+                }
             }
-            if (!isset($this->params[$field['name']]['type']) and isset($this->params[$field['name']]['max'] ) ) {
-                $this->params[$field['name']]['maxlength'] = $this->params[$field['name']]['max'];
-                unset($this->params[$field['name']]['max']);
-            }
+        }
+        catch (ErrorException $e){
+            throw new \Exception('Невозможно отобразить сервис.');
         }
     }
 
@@ -64,6 +70,7 @@ class PaymentForm extends Service
         try {
         $model = new Payment($this->attrs, $this->params, $this->labels);
         $model->addRule($this->attrs, 'trim');
+        $model->addRule($this->attrs, 'pay');
             foreach ($fields as $field) { //get rules for js validation in form
                 if ($field['hidden']) continue;
                 foreach ($field['validations'] as $validation) {
@@ -80,8 +87,11 @@ class PaymentForm extends Service
                 }
             }
         }
-        catch (UnknownPropertyException $e){
-            throw new UnknownPropertyException('Невозможно отобразить сервис.');
+        //catch (UnknownPropertyException $e){
+            //throw new Exception('Невозможно отобразить сервис.');
+        //}
+        catch (\Exception $e){
+            throw new \Exception('Невозможно отобразить сервис.');
         }
         return $model;
     }

@@ -4,10 +4,11 @@
 namespace app\controllers;
 
 use app\forms\LoginForm;
+use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use yii\helpers\Url;
 use yii\httpclient\Exception;
 use Yii;
-use yii\web\ServerErrorHttpException;
+use yii\web\UnprocessableEntityHttpException;
 
 class SiteController extends BehaviorsController
 {
@@ -17,24 +18,18 @@ class SiteController extends BehaviorsController
     {
         $this->layout = 'basic';
         $this->view->title = 'Авторизация!';
-        $session = Yii::$app->session;
         $model = new LoginForm();
         if ( Yii::$app->request->isPost ) {
-            if ( $model->load(Yii::$app->request->post()) and $model->validate()) {
-                try {
-                    $model->login();
+            try {
+                if ($model->load(Yii::$app->request->post()) and $model->validate()) {
                     return $this->redirect(['payment/category']);
-                } catch (ServerErrorHttpException $e) {
-                    $session['error'] = $e->getMessage();
-                    return $this->render('auth', compact('model'));
-                } catch (Exception $e) {
-                    $session['error'] = $e->getMessage();
-                    return $this->render('auth', compact('model'));
                 }
-            }else {
-                $session['error'] = $model->errors;
             }
-        }
+            catch (InternalErrorException $e) {
+                Yii::$app->session->setFlash('error', $e->getMessage());
+                return $this->render('auth', compact('model'));
+                }
+            }
         return $this->render('auth', compact('model'));
     }
 

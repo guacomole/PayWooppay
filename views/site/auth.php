@@ -2,18 +2,20 @@
 
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
+use yii\widgets\MaskedInput;
+
 ?>
 
 <?php echo "<h1 ><br><em>Авторизация</em><br></h1>" ?>
-<?php if ( isset(Yii::$app->session['error']) and Yii::$app->session['error'] ): ?>
+<?php if ( Yii::$app->session->hasFlash('error') ): ?>
     <?php
-    debug(Yii::$app->session['error']);
+    debug(Yii::$app->session->getFlash('error'));
     ?>
 <?php endif; ?>
 <?php $form = ActiveForm::begin(['options' => ['id' => 'Form'], 'action' => ['site/auth'],
     //'enableClientValidation' => false,
     ]) ?>
-<?= $form->field($model, 'phone')->textInput(['type' => "tel",['pattern' => "/^7\d{10}$/", 'maxlength' => 11]]); ?>
+<?= $form->field($model, 'login')->widget(MaskedInput::class, ['mask' => '+7 (999)-999-99-99',]); ?>
 <?= $form->field($model, 'password')->passwordInput();  ?>
 <?= Html::submitButton('Войти', ['class' => ['btn btn-success'],]) ?>
 <?php $form = ActiveForm::end() ?>

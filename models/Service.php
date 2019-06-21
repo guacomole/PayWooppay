@@ -5,15 +5,21 @@ namespace app\models;
 
 use app\components\CoreProxy;
 
-class Service extends Category
+class Service
 {
     public $pageCount;
     public $fields;
+    public $id;
+    public $title;
+    public $picture_url;
 
     public function __construct($id=null, $title=null, $picture_url=null, $fields=null)
     {
         $this->fields = $fields;
-        parent::__construct($id, $title, $picture_url);
+        $this->id = $id;
+        $this->title = $title;
+        $this->picture_url = $picture_url;
+        return $this;
     }
 
     public function find($page=null, $id=null, $categoryId=null)

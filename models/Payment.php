@@ -3,8 +3,10 @@
 namespace app\models;
 
 use app\components\CoreProxy;
+use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use yii\base\DynamicModel;
-use yii\web\ServerErrorHttpException;
+use yii\web\UnprocessableEntityHttpException;
+use Yii;
 
 class Payment extends DynamicModel
 {
@@ -53,16 +55,22 @@ class Payment extends DynamicModel
         return $operation_id;
     }
 
-    public function pay($id)
+    public function pay($id) //PSR 1-4,7, статичный размер для, центровку по картинке, базовая картинка template, пагинация jquery
     {
-        $operation_id = $this->makePayment($id);
         try {
-            $check = new Check($operation_id);
-        }
-        catch (ServerErrorHttpException $e) {
+        $operation_id = $this->makePayment(Yii::$app->session['idPayment']);
+        $check = new Check($operation_id);
+        } catch (InternalErrorException $e) { //показывать id операции 11 status, если чек приход долго, обратитесь в службу поддержки
             sleep(3);
-            $operation_id = $this->makePayment($id);
+            $operation_id = $this->makePayment(Yii::$app->session['idPayment']);
             $check = new Check($operation_id);
+        } catch (UnprocessableEntityHttpException $e){
+            $error = json_decode($e->getMessage(), true);
+            if (in_array($error[0]['field'], $this->attrs))
+                $this->addErrors([$error[0]['field'] => $error[0]['message']]);
+            else
+                throw new InternalErrorException('Непредвиденные технические проблемы');
+            return false;
         }
         return $check;
     }

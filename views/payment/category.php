@@ -1,10 +1,6 @@
-<?php
-use yii\helpers\Html;
-?>
 
-<?php if ( true ): ?>
+<?php if ( isset($categories)): ?>
     <?php
-    debug(Yii::$app->session['token']);
     $pathAction = Yii::$app->controller->route;
     $pathLink = 'service';
     foreach ($categories as $category){
