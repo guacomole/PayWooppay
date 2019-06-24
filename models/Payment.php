@@ -11,66 +11,47 @@ use Yii;
 class Payment extends DynamicModel
 {
     public $attrs;
-    public $params;
-    public $labels;
-    public function __construct(array $attrs, array $params, array $labels)
-    {
-        $this->params = $params; // два атрибута для очистки маски в beforeValidate
-        $this->attrs = $attrs;
-        $this->labels = $labels;
-        parent::__construct($attrs); //создание динамической модели
-    }
+    public $operation_id;
+    public $body = [];
 
-    public function beforeValidate()
+    public function paymentValidate() //используется как правило валидации для PaymentForm
     {
-        if (parent::beforeValidate()) {
+        try {
+            $this->body['service_id'] = Yii::$app->session['idPayment'];
             foreach ($this->attrs as $attr) {
-                if ( isset($this->params[$attr]['mask']) ) {
-                    $this->$attr = substr(preg_replace("/[^0-9,.]/", "", $this->$attr), 1);
-                }
+                $this->body['fields'][$attr] = $this->$attr;
             }
-            return true;
-        }
-        else{
+            $response = CoreProxy::PaymentValidate($this->body);
+            $this->body = json_decode($response->content, true);
+        } catch (UnprocessableEntityHttpException $e){
+            $error = json_decode($e->getMessage(), true);
+            if (in_array($error[0]['field'], $this->attrs)) {
+                $this->addErrors([$error[0]['field'] => $error[0]['message']]);
+            }
+            else {
+                throw new InternalErrorException($e);
+            }
             return false;
         }
+
     }
 
-    public function paymentValidate($id)
+    public function makePayment()
     {
-        $body = [];
-        $body['service_id'] = $id;
-        foreach ($this->attrs as $attr){
-            $body['fields'][$attr] = $this->$attr;
-        }
-        $response = CoreProxy::PaymentValidate($body);
-        return json_decode($response->content, true);
-    }
-
-    public function makePayment($id)
-    {
-        $body = $this->paymentValidate($id);
-        $response = CoreProxy::makePayment($body);
+        $response = CoreProxy::makePayment($this->body);
         $operation_id = json_decode($response->content, true)['operation']['id'];
         return $operation_id;
     }
 
-    public function pay($id) //PSR 1-4,7, статичный размер для, центровку по картинке, базовая картинка template, пагинация jquery
+    public function pay() //PSR 1-4,7, статичный размер для, центровку по картинке, базовая картинка template, пагинация jquery
     {
         try {
-        $operation_id = $this->makePayment(Yii::$app->session['idPayment']);
-        $check = new Check($operation_id);
+            $this->operation_id = $this->makePayment();
+            $check = new Check($this->operation_id);
         } catch (InternalErrorException $e) { //показывать id операции 11 status, если чек приход долго, обратитесь в службу поддержки
             sleep(3);
-            $operation_id = $this->makePayment(Yii::$app->session['idPayment']);
-            $check = new Check($operation_id);
-        } catch (UnprocessableEntityHttpException $e){
-            $error = json_decode($e->getMessage(), true);
-            if (in_array($error[0]['field'], $this->attrs))
-                $this->addErrors([$error[0]['field'] => $error[0]['message']]);
-            else
-                throw new InternalErrorException('Непредвиденные технические проблемы');
-            return false;
+            $this->operation_id = $this->makePayment();
+            $check = new Check($this->operation_id);
         }
         return $check;
     }

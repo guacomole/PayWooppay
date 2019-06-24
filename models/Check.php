@@ -10,6 +10,7 @@ use yii\web\ServerErrorHttpException;
 
 class Check extends Model
 {
+
     public $checkInPDF;
 
     public function __construct($id)
