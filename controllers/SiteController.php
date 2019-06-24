@@ -25,7 +25,7 @@ class SiteController extends BehaviorsController
                     return $this->redirect(['payment/category']);
                 }
             }
-            catch (InternalErrorException $e) {
+            catch (\Exception $e) {
                 Yii::$app->session->setFlash('error', $e->getMessage());
                 return $this->render('auth', compact('model'));
                 }

@@ -34,11 +34,17 @@ class PaymentController extends BehaviorsController
      */
     public function actionService($page = null, $category_id=null)
     {
-        $this->view->title = 'Сервисы';
-        $serviceModel = new Service();
-        $services = $serviceModel->find($page, null, $category_id);
-        $pageCount = $serviceModel->pageCount;
-        return $this->render('service', compact( 'pageCount', 'services') );
+        try {
+            $this->view->title = 'Сервисы';
+            $serviceModel = new Service();
+            $services = $serviceModel->find($page, null, $category_id);
+            $pageCount = $serviceModel->pageCount;
+            return $this->render('service', compact('pageCount', 'services'));
+        } catch (\Exception $e){
+            Yii::$app->session->setFlash('error', $e->getMessage());
+            return $this->render('service');
+
+        }
 
     }
 
@@ -56,12 +62,10 @@ class PaymentController extends BehaviorsController
                 }
             }
             return $this->render('payment', compact('paymentModel'));
-        }
-        catch(InternalErrorException $e){
+        } catch(InternalErrorException $e){
             Yii::$app->session->setFlash('error', $e->getMessage());
             return $this->render('payment', compact('paymentModel'));
-        }
-        catch (\Exception $e){
+        } catch (\Exception $e){
             Yii::$app->session->setFlash('error', $e->getMessage());
             return $this->render('payment');
 

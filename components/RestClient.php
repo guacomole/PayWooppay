@@ -7,7 +7,7 @@ namespace app\components;
 use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use yii\httpclient\Client;
 use yii\httpclient\Exception;
-use yii\web\BadRequestHttpException;
+use Yii;
 use yii\web\ServerErrorHttpException;
 use yii\web\UnprocessableEntityHttpException;
 
@@ -44,13 +44,17 @@ class RestClient
             throw new InternalErrorException('Непредвиденные технические проблемы. Пожалуйста, попробуйте позже.');
         }
         if( !$response->isOk ){
-            if ( isset(json_decode($response->content,true)['0']['field'])) {
+            if ($response->getStatusCode() == 422){
                 throw new UnprocessableEntityHttpException($response->content);
             }
             else {
-                throw new ServerErrorHttpException($response->content);
+                throw new ServerErrorHttpException($response);
             }
         }
+        if( !$response->content ){
+            throw new InternalErrorException('Пустое тело ответа.');
+        }
+        Yii::$app->session['response'] = $response->content;
         return $response;
     }
 }

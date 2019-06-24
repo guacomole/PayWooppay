@@ -32,7 +32,8 @@ use yii\helpers\Url;
     }
         echo Html::submitButton('Оплатить', ['class' => 'btn btn-primary']);
         ActiveForm::end();
-        debug($paymentModel);
+        debug(Yii::$app->session['response'])
+        //debug($paymentModel);
         ?>
 
 <?php endif; ?>

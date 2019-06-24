@@ -4,11 +4,8 @@
 namespace app\forms;
 
 use app\models\Service;
-use yii\base\ErrorException;
-use yii\base\UnknownPropertyException;
 use app\models\Payment;
-use yii\httpclient\Exception;
-use yii\web\ServerErrorHttpException;
+
 
 class PaymentForm extends Service
 {
@@ -19,20 +16,23 @@ class PaymentForm extends Service
     public function __construct($id)
     {
         try{
-            $service = $this->find(null, $id);
+            $service = new Service();
+            $service = $service->find(null, $id);
             parent::__construct($service->id, $service->title, $service->picture_url, $service->fields);
             $this->getHtmlRules();
-            return $this;
+            return $this->getRules();
         }
-        catch (Exception $e) {
-            throw new ServerErrorHttpException('Непредвиденные технические проблемы.');
+        catch (\Exception $e) {
+            throw new \Exception('Невозможно отобразить сервис.');
         }
     }
 
     public function getHtmlRules()
     {
         $fields = $this->fields;
-        try {
+        if ( !$fields ){
+            throw new \Exception('Невозможно отобразить сервис.');
+        }
             foreach ($fields as $field) {  //get params for html validation in form
                 if ($field['hidden']) continue;
                 $this->labels[$field['name']] = $field['title'];
@@ -58,16 +58,11 @@ class PaymentForm extends Service
                     unset($this->params[$field['name']]['max']);
                 }
             }
-        }
-        catch (ErrorException $e){
-            throw new \Exception('Невозможно отобразить сервис.');
-        }
     }
 
     public function getRules()
     {
         $fields = $this->fields;
-        try {
         $model = new Payment($this->attrs, $this->params, $this->labels);
         $model->addRule($this->attrs, 'trim');
         $model->addRule($this->attrs, 'pay');
@@ -86,13 +81,6 @@ class PaymentForm extends Service
                     }
                 }
             }
-        }
-        //catch (UnknownPropertyException $e){
-            //throw new Exception('Невозможно отобразить сервис.');
-        //}
-        catch (\Exception $e){
-            throw new \Exception('Невозможно отобразить сервис.');
-        }
         return $model;
     }
 }

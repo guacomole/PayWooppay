@@ -5,8 +5,8 @@ namespace app\models;
 
 
 use app\components\CoreProxy;
-use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use yii\base\Model;
+use yii\web\ServerErrorHttpException;
 
 class Check extends Model
 {
@@ -27,6 +27,6 @@ class Check extends Model
             return $response;
         }
         else
-            throw new InternalErrorException('Невозможно произвести оплату. Попробуйте позже.');
+            throw new ServerErrorHttpException('Невозможно произвести оплату. Попробуйте позже.');
     }
 }
