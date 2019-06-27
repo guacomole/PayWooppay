@@ -69,7 +69,7 @@ class CoreProxy
         return $response;
     }
 
-    public static function PaymentValidate($body)
+    public static function paymentValidate($body)
     {
         $headers = ['Authorization' => Yii::$app->session['token'], 'Content-Type' => 'application/json'];
         $response = RestClient::post(self::PAYMENT_VALIDATION_URL, $body, $headers);

@@ -6,21 +6,10 @@ input[type=number]::-webkit-outer-spin-button {
 
 input {
     margin-top: 2px;
-    width: 120px;
-}
-
-input[type=password]{
-    width: 200px;
+    width: 800px;
 }
 
 
-input[type=text]{
-    width: 150px;
-}
-
-input[type=number]{
-    width: 120px;
-}
 
 h1 {
     text-align: left;
@@ -62,6 +51,16 @@ input[type="checkbox"] {
 
 input[type="checkbox"]:checked ~ .text {
     display: block;
+    border: 5px outset green;
+    border-radius: 10px;
+    background-color: whitesmoke;
+    padding: 4px 8px;
+    padding-bottom: 20px;
+    position: fixed; top: 50%; left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    font: large/110% "new century schoolbook", serif;
 }
 
 /* Стилизация псевдокнопки */
@@ -72,6 +71,7 @@ input[type="checkbox"]:checked ~ .text {
     background-color: #ffffff;
     border: 1px solid #eeeeee;
     cursor: pointer;
+
 }
 
 .window-info {
@@ -83,3 +83,45 @@ input[type="checkbox"]:checked ~ .text {
     width: 300px;
     font: italic 15px/30px Arial;
 }
+
+.form-div {
+    padding: 80px;
+    background: whitesmoke;
+    border: 5px outset #1E90FF;
+    border-radius: 10px;
+    position: fixed; top: 50%; left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+
+}
+
+.check-btn {
+    position: fixed; top: 50%; left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+.image {
+    width: 75px;
+    height: 75px;
+    margin-left: 30%;
+    border: 5px outset orange;
+    border-radius: 10px;
+}
+
+.form-div > h5 {
+    text-align: center;
+}
+
+.print-btn {
+    width: 200px;
+    display: block;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    font: large/110% "new century schoolbook", serif;
+}
+
+
+

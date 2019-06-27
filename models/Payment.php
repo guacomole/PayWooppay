@@ -14,14 +14,14 @@ class Payment extends DynamicModel
     public $operation_id;
     public $body = [];
 
-    public function paymentValidate() //используется как правило валидации для PaymentForm
+    public function paymentValidate()  //используется как правило валидации для PaymentForm
     {
         try {
             $this->body['service_id'] = Yii::$app->session['idPayment'];
             foreach ($this->attrs as $attr) {
                 $this->body['fields'][$attr] = $this->$attr;
             }
-            $response = CoreProxy::PaymentValidate($this->body);
+            $response = CoreProxy::paymentValidate($this->body);
             $this->body = json_decode($response->content, true);
         } catch (UnprocessableEntityHttpException $e){
             $error = json_decode($e->getMessage(), true);
@@ -45,14 +45,8 @@ class Payment extends DynamicModel
 
     public function pay() //PSR 1-4,7, статичный размер для, центровку по картинке, базовая картинка template, пагинация jquery
     {
-        try {
-            $this->operation_id = $this->makePayment();
-            $check = new Check($this->operation_id);
-        } catch (InternalErrorException $e) { //показывать id операции 11 status, если чек приход долго, обратитесь в службу поддержки
-            sleep(3);
-            $this->operation_id = $this->makePayment();
-            $check = new Check($this->operation_id);
-        }
+        $this->operation_id = $this->makePayment();
+        $check = new Check($this->operation_id);
         return $check;
     }
 }

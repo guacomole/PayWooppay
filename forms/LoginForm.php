@@ -5,7 +5,6 @@ namespace app\forms;
 use app\components\CoreProxy;
 use yii\base\Model;
 use Yii;
-use yii\db\Exception;
 use yii\web\UnprocessableEntityHttpException;
 
 class LoginForm extends Model
@@ -43,8 +42,5 @@ class LoginForm extends Model
         catch (UnprocessableEntityHttpException $e) {
             $this->addErrors(['login' => 'Неверный номер телефона или пароль', 'password' => 'Неверный номер телефона или пароль']);
         }
-        //catch (\Exception $e){
-            //throw new E
-        //}
     }
 }

@@ -4,14 +4,10 @@
 namespace app\controllers;
 
 use Symfony\Component\CssSelector\Exception\InternalErrorException;
-use yii\base\UnknownPropertyException;
 use app\forms\PaymentForm;
 use app\models\Category;
 use app\models\Service;
 use Yii;
-use yii\helpers\Url;
-use yii\httpclient\Exception;
-
 
 class PaymentController extends BehaviorsController
 {
@@ -71,7 +67,7 @@ class PaymentController extends BehaviorsController
             Yii::$app->session->setFlash('error', 'Невозможно произвести платёж.');
             return $this->render('payment', compact('paymentModel'));
         } catch (\Exception $e){
-            Yii::$app->session->setFlash('error', 'Невозможно отобразить услугу.');
+            Yii::$app->session->setFlash('error', 'Невозможно отобразить услугу.');//'Невозможно отобразить услугу.');
             return $this->render('payment');
 
         }

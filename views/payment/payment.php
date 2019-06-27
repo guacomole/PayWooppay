@@ -5,16 +5,17 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 ?>
 
-
-<?php
+<?php  ?>
+<?php if ( isset($paymentModel) ): ?>
+<div class="form-div">
+    <?php
+    echo Html::img($paymentModel->picture_url, ['class' => 'image']),
+        '<br>',
+      '<h5>' . $paymentModel->service_title . '</h5>';
     if ( Yii::$app->session->hasFlash('error') ){
         debug(Yii::$app->session->getFlash('error'));
-
     }
-    ?>
-<?php if ( isset($paymentModel) ): ?>
-    <?php
-    $form = ActiveForm::begin( ['options' => ['id' => 'PaymentForm'], 'action' => [ Url::to(['payment', 'id' => Yii::$app->session['idPayment']]) ] ]);
+    $form = ActiveForm::begin( ['options' => ['id' => 'PaymentForm', ], 'action' => [ Url::to(['payment', 'id' => Yii::$app->session['idPayment']]) ] ]);
     foreach($paymentModel->attrs as $name) //вывод полей
     {
         if ( isset($paymentModel->params[$name]['mask']) ){  //если у поля есть маска
@@ -32,8 +33,6 @@ use yii\helpers\Url;
     }
         echo Html::submitButton('Оплатить', ['class' => 'btn btn-primary']);
         ActiveForm::end();
-        debug(Yii::$app->session['response'])
-        //debug($paymentModel);
         ?>
-
+</div>
 <?php endif; ?>

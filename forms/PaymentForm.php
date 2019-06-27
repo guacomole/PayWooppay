@@ -3,25 +3,25 @@
 
 namespace app\forms;
 
-use app\models\Check;
 use app\models\Service;
 use app\models\Payment;
-use Symfony\Component\CssSelector\Exception\InternalErrorException;
-use Yii;
-use yii\base\DynamicModel;
-use yii\web\UnprocessableEntityHttpException;
+
 
 
 class PaymentForm extends Payment
 {
-    public $attrs = []; //программные названия полей, будущие атрибуты динамической модели
+    public $attrs = []; //атрибуты динамической модели, которые заполняются в форме
     public $params = []; //ассоциативный массив, $attr => html код для превалидации
     public $labels = []; //клиентские названия полей
+    public $service_title;
+    public $picture_url;
 
     public function __construct($id)
     {
         $service = new Service();
         $service = $service->find(null, $id);
+        $this->service_title = $service->title;
+        $this->picture_url = $service->picture_url;
         $this->getHtmlRules($service->fields);
         $this->getRules($service->fields);
         return $this;
@@ -30,10 +30,10 @@ class PaymentForm extends Payment
     public function getHtmlRules($fields)
     {
         if ( !$fields ){
-            throw new \Exception('Невозможно отобразить сервис.');
+            throw new \Exception('Пустые поля.');
         }
         foreach ($fields as $field) {  //get params for html validation in form
-            if ($field['hidden']) continue;
+            if ( $field['hidden'] or $field['name'] == 'txn_id' ) continue;
             $this->labels[$field['name']] = $field['title'];
             $this->params[$field['name']] = [];
             if ($field['mask']) {
@@ -67,7 +67,7 @@ class PaymentForm extends Payment
         $this->addRule($this->attrs, 'trim');
         $this->addRule($this->attrs, 'paymentValidate');
         foreach ($fields as $field) { //get rules for js validation in form
-            if ($field['hidden']) continue;
+            if ( $field['hidden'] or isset($field['txn_id']) ) continue;
             foreach ($field['validations'] as $validation) {
                 if (isset($validation['param']['allowEmpty'])) unset($validation['param']['allowEmpty']);
                 if ($validation['type'] == 'length') {
