@@ -5,16 +5,15 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 ?>
 
-<?php  ?>
+<?php if ( Yii::$app->session->hasFlash('error') ){
+    debug(Yii::$app->session->getFlash('error'));
+} ?>
 <?php if ( isset($paymentModel) ): ?>
 <div class="form-div">
     <?php
     echo Html::img($paymentModel->picture_url, ['class' => 'image']),
         '<br>',
       '<h5>' . $paymentModel->service_title . '</h5>';
-    if ( Yii::$app->session->hasFlash('error') ){
-        debug(Yii::$app->session->getFlash('error'));
-    }
     $form = ActiveForm::begin( ['options' => ['id' => 'PaymentForm', ], 'action' => [ Url::to(['payment', 'id' => Yii::$app->session['idPayment']]) ] ]);
     foreach($paymentModel->attrs as $name) //вывод полей
     {
@@ -36,3 +35,4 @@ use yii\helpers\Url;
         ?>
 </div>
 <?php endif; ?>
+<?php debug(Yii::$app->session['response']) ?>

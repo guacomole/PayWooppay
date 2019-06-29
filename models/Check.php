@@ -7,6 +7,7 @@ namespace app\models;
 use app\components\CoreProxy;
 use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use yii\base\Model;
+use app\myExceptions\BadPayException;
 use yii\web\ServerErrorHttpException;
 
 class Check extends Model
@@ -34,12 +35,11 @@ class Check extends Model
             $this->time = $response['time'];
             foreach ($response['ident'] as $item) {
                 $this->ident = $this->ident . $item['title'] . ': ' . $item['value'] . '<br>';
-
             }
         }
         return $this;
     }
-    public function getBankCheck($operation_id, $badstatus = false)
+    public function getBankCheck($operation_id, $bad_operation = false)
     {
         $response = CoreProxy::getBankCheck($operation_id);
         $response = json_decode($response->content, true);
@@ -49,9 +49,9 @@ class Check extends Model
         } elseif ($response['transaction']['status'] == 11) {
             sleep(3);
         } else {
-            throw new InternalErrorException('Невозможно произвести платёж.');
+            throw new BadPayException('Невозможно произвести платёж. Попробуйте позже.');
         }
-        if ( $badstatus ) return false;
+        if ( $bad_operation ) return false;
         return $this->getBankCheck($operation_id, true);
     }
 

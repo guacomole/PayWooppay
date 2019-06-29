@@ -5,7 +5,8 @@ namespace app\forms;
 
 use app\models\Service;
 use app\models\Payment;
-
+use Symfony\Component\CssSelector\Exception\InternalErrorException;
+use yii\base\Exception;
 
 
 class PaymentForm extends Payment
@@ -18,19 +19,23 @@ class PaymentForm extends Payment
 
     public function __construct($id)
     {
-        $service = new Service();
-        $service = $service->find(null, $id);
-        $this->service_title = $service->title;
-        $this->picture_url = $service->picture_url;
-        $this->getHtmlRules($service->fields);
-        $this->getRules($service->fields);
-        return $this;
+
+            $service = new Service();
+            $service = $service->find(null, $id);
+            $this->service_title = $service->title;
+            $this->picture_url = $service->picture_url;
+        try {   $this->getHtmlRules($service->fields);
+            $this->getRules($service->fields);
+            return $this;
+        } catch (\Exception $e) {
+            throw new InternalErrorException('Невозможно отобразить услугу.', 500);
+        }
     }
 
     public function getHtmlRules($fields)
     {
         if ( !$fields ){
-            throw new \Exception('Пустые поля.');
+            throw new Exception('Пустые поля.');
         }
         foreach ($fields as $field) {  //get params for html validation in form
             if ( $field['hidden'] or $field['name'] == 'txn_id' ) continue;

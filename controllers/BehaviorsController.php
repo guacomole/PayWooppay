@@ -23,7 +23,7 @@ class BehaviorsController extends Controller
                     [
                         'allow' => true,
                         'controllers' => ['site'],
-                        'actions' => ['auth'],
+                        'actions' => ['auth', 'error'],
                         'verbs' => ['GET', 'POST'],
                         'roles' => ['?'],
                     ],

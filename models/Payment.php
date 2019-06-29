@@ -27,8 +27,7 @@ class Payment extends DynamicModel
             $error = json_decode($e->getMessage(), true);
             if (in_array($error[0]['field'], $this->attrs)) {
                 $this->addErrors([$error[0]['field'] => $error[0]['message']]);
-            }
-            else {
+            } else {
                 throw new InternalErrorException($e);
             }
             return false;
