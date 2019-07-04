@@ -66,17 +66,18 @@ input[type="checkbox"] {
     width: 350px;
 }
 
-input[type="checkbox"]:checked ~ .text {
+/* input[type="checkbox"]:checked ~ .text { */
+.text {
     display: block;
     border: 5px outset green;
     border-radius: 10px;
     background-color: whitesmoke;
     padding: 4px 8px;
     padding-bottom: 20px;
-    position: fixed; top: 50%; left: 50%;
+    /*position: relative; left: 50%;
     -webkit-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);*/
+
     font: large/110% "new century schoolbook", serif;
 }
 
@@ -102,23 +103,18 @@ input[type="checkbox"]:checked ~ .text {
 }
 
 .form-div {
-
+    display: flow-root;
     padding: 30px 80px 30px 80px;
     background: whitesmoke;
     border: 5px outset #1E90FF;
     border-radius: 10px;
-    position: relative;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    margin-top: 20%;
+    margin-top: 80px;
     margin-bottom: 100px;
     width: 500px;
-    max-height: 500px;
-
 }
 
 .check-btn {
-    position: fixed; top: 50%; left: 50%;
+    position: relative; top: 50%; left: 50%;
     -webkit-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
@@ -151,6 +147,12 @@ input[type="checkbox"]:checked ~ .text {
     font: large/110% "new century schoolbook", serif;
 }
 
+.center {
+    position: relative; left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
 
 
 

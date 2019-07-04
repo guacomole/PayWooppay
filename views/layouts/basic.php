@@ -19,11 +19,13 @@ AppAsset::register($this);
 </head>
 <body>
     <?php $this->beginBody() ?>
-    <div class="wrap">
-        <div class="container">
-            <?= $content ?>
-        </div>
-    </div>
+    <header>
+        <nav class="navbar navbar-default navbar-static-top" style="position: -webkit-sticky; position: sticky; top: 0;
+    background-color: darkorange; margin-bottom: 30px;">
+            <p class="navbar-brand center " style="color:white; font-size: 36px; margin-top:30px; margin-bottom: -20px"><b>PayWooppay</b></p>
+        </nav>
+    </header>
+    <?= $content ?>
     <?php $this->endBody() ?>
 </body>
 </html>

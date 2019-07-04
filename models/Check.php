@@ -5,10 +5,9 @@ namespace app\models;
 
 
 use app\components\CoreProxy;
-use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use yii\base\Model;
 use app\myExceptions\BadPayException;
-use yii\web\ServerErrorHttpException;
+
 
 class Check extends Model
 {
@@ -32,7 +31,7 @@ class Check extends Model
             $this->amount = $response['amount'];
             $this->commission = $response['commission'];
             $this->admit = $response['admit'];
-            $this->time = $response['time'];
+            $this->time = date("d.m.Y H:i:s", strtotime($response['time']));
             foreach ($response['ident'] as $item) {
                 $this->ident = $this->ident . $item['title'] . ': ' . $item['value'] . '<br>';
             }

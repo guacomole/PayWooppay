@@ -18,7 +18,7 @@ class SiteController extends BehaviorsController
 
     public function actions()
     {
-        $this->layout = 'error';
+        $this->layout = 'basic';
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
@@ -32,15 +32,10 @@ class SiteController extends BehaviorsController
         $this->view->title = 'Авторизация!';
         $model = new LoginForm();
         if ( Yii::$app->request->isPost ) {
-            //try {
-                if ($model->load(Yii::$app->request->post()) and $model->validate()) {
-                    return $this->redirect(['payment/category']);
-                }
-            //} catch (\Exception $e) {
-                //Yii::$app->session->setFlash('error', $e);
-                //return $this->render('auth', compact('model'));
-                //}
+            if ($model->load(Yii::$app->request->post()) and $model->validate()) {
+                return $this->redirect(['payment/category']);
             }
+        }
         return $this->render('auth', compact('model'));
     }
 

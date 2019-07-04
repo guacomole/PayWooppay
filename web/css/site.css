@@ -128,7 +128,7 @@ a.desc:after {
     box-shadow: 0 8px 16px 0 rgba(0,40,120,.35);
     transition: .5s;
     text-align: center;
-    width: 250px;
+    width: 200px;
     height: auto;
 }
 .super-btn:hover {

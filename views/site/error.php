@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var $message string */
 /* @var $exception Exception */
 
-$this->title = $name;
+$this->title = 'Ошибка';
 ?>
 <div class="site-error">
 <?php if ($exception->statusCode == 404 or $exception->getCode() == 404) { ?>
@@ -16,12 +16,12 @@ $this->title = $name;
 
 <?php } elseif ($exception->statusCode == 500 or $exception->getCode() == 500) { ?>
     <p class="text-danger text-center lead"> Упс... Что-то пошло не так... </p>
-    <div class="alert alert-danger">
+    <div class="text-center">
         <?= nl2br(Html::encode($exception->getMessage())) ?>
     </div>
     <?php }else{  ?>
     <p class="text-danger text-center lead"> Упс... Что-то пошло не так... </p>
-    <div class="alert alert-danger">
+    <div class="text-danger text-center">
         <?= nl2br(Html::encode('Непредвиденные технические проблемы.')) ?>
     </div>
     <?php }  ?>

@@ -9,25 +9,24 @@ use yii\helpers\Url;
     debug($error);
 } ?>
 <?php if ( isset($paymentModel) ): ?>
-<div class="form-div">
+<!--<div class="form-div">-->
     <?php
+
+    $form = ActiveForm::begin( ['options' => ['id' => 'PaymentForm', 'class' => 'form-div center-block'], 'action' => [ Url::to(['payment', 'id' => Yii::$app->session['idPayment']]) ] ]);
     echo Html::img($paymentModel->picture_url, ['class' => 'image']),
-        '<br>',
+    '<br>',
     Html::tag('h4', $paymentModel->service_title);
     if ( isset($error) ){
         echo Html::tag('h5', $error, ['style' => 'text-align:center; color:red']);
     }
-    $form = ActiveForm::begin( ['options' => ['id' => 'PaymentForm', ], 'action' => [ Url::to(['payment', 'id' => Yii::$app->session['idPayment']]) ] ]);
     foreach($paymentModel->attrs as $name)  //вывод полей
     {
         if ( isset($paymentModel->params[$name]['mask']) ){   //если у поля есть маска
             echo $form->field($paymentModel, $name)->widget(MaskedInput::class, [
                'mask' => $paymentModel->params[$name]['mask'],
             ])->label($paymentModel->labels[$name]);
-        }
-        elseif ( isset($paymentModel->params[$name]) ){   //если есть html параметры валидации
+        } elseif ( isset($paymentModel->params[$name]) ){   //если есть html параметры валидации
             echo $form->field($paymentModel, $name)->textInput($paymentModel->params[$name])->label($paymentModel->labels[$name]);
-
         } else{ //вывод простейшего поля
             echo $form->field($paymentModel, $name)->label($paymentModel->labels[$name]);
         }
@@ -35,5 +34,5 @@ use yii\helpers\Url;
         echo Html::submitButton('Оплатить', ['class' => 'btn btn-primary']);
         ActiveForm::end();
         ?>
-</div>
+<!--</div>-->
 <?php endif; ?>

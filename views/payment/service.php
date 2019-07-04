@@ -1,12 +1,11 @@
 <?php
 use yii\helpers\Url;
-use yii\helpers\Html;
 use yii\widgets\LinkPager;
 /** @var Array` $services */
 ?>
 <?php
     if ( Yii::$app->session->hasFlash('error') ){
-        debug(Yii::$app->session->getFlash('error'));
+       echo '<h3 class="text-center">', 'Тут пока что нет сервисов...', '</h3>';
     }
     ?>
 
