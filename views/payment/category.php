@@ -1,5 +1,6 @@
 
-<?php if ( isset($categories)): ?>
+<?php if ( $categories ): ?>
+    <div class="btn-wrapper">
     <?php
     $pathAction = Yii::$app->controller->route;
     $pathLink = 'service';
@@ -11,6 +12,6 @@
         "</a>";
     }
     ?>
-
+    </div>
 <?php endif; ?>
 

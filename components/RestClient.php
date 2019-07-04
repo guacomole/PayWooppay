@@ -26,7 +26,7 @@ class RestClient
         return $response;
     }
 
-    public static function  get($url, $body=[], $headers=[]){
+    public static function get($url, $body=[], $headers=[]){
         $client = new Client();
         $request = $client->createRequest()
             ->setMethod('GET')
@@ -40,10 +40,10 @@ class RestClient
     private static function sendRequest($request)
     {
         try{
-            $response = $request -> send();
+            $response = $request->send();
             Yii::$app->session['response'] = $response->getStatusCode();
         } catch (Exception $e){
-            throw new InternalErrorException('Непредвиденные технические проблемы. Пожалуйста, попробуйте позже.');
+            throw new InternalErrorException('Непредвиденные технические проблемы. Пожалуйста, попробуйте позже.', 500);
         }
         if( !$response->isOk ){
             if ($response->getStatusCode() == 422){

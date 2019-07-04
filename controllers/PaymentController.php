@@ -8,6 +8,7 @@ use app\models\Category;
 use app\models\Service;
 use Yii;
 use app\myExceptions\BadPayException;
+use yii\data\Pagination;
 
 class PaymentController extends BehaviorsController
 {
@@ -32,8 +33,11 @@ class PaymentController extends BehaviorsController
         $this->view->title = 'Сервисы';
         $serviceModel = new Service();
         $services = $serviceModel->find($page, null, $category_id);
-        $pageCount = $serviceModel->pageCount;
-        return $this->render('service', compact('pageCount', 'services'));
+        $pages = new Pagination(['totalCount' => $serviceModel->totalCount]);
+        if ( empty($services) ){
+            Yii::$app->session->setFlash('error', 'Тут пока что нет сервисов.');
+        }
+        return $this->render('service', compact( 'services', 'pages'));
     }
 
     public function actionPayment($id)
@@ -50,8 +54,8 @@ class PaymentController extends BehaviorsController
             }
             return $this->render('payment', compact('paymentModel'));
         } catch(BadPayException $e){
-            Yii::$app->session->setFlash('error', 'Невозможно произвести платёж. Попробуйте позже.');
-            return $this->render('payment', compact('paymentModel'));
+            $error = 'Невозможно произвести платёж. Попробуйте позже.';
+            return $this->render('payment', compact('paymentModel', 'error'));
         }
     }
 }

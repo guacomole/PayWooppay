@@ -7,6 +7,7 @@ use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use yii\base\DynamicModel;
 use yii\web\UnprocessableEntityHttpException;
 use Yii;
+use app\myExceptions\BadPayException;
 
 class Payment extends DynamicModel
 {
@@ -28,11 +29,10 @@ class Payment extends DynamicModel
             if (in_array($error[0]['field'], $this->attrs)) {
                 $this->addErrors([$error[0]['field'] => $error[0]['message']]);
             } else {
-                throw new InternalErrorException($e);
+                throw new BadPayException($e);
             }
             return false;
         }
-
     }
 
     public function makePayment()

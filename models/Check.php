@@ -49,7 +49,7 @@ class Check extends Model
         } elseif ($response['transaction']['status'] == 11) {
             sleep(3);
         } else {
-            throw new BadPayException('Невозможно произвести платёж. Попробуйте позже.');
+            throw new BadPayException('Bad status of payment');
         }
         if ( $bad_operation ) return false;
         return $this->getBankCheck($operation_id, true);

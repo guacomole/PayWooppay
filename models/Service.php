@@ -5,9 +5,11 @@ namespace app\models;
 
 use app\components\CoreProxy;
 
+
 class Service
 {
     public $pageCount;
+    public $totalCount;
     public $fields;
     public $id;
     public $title;
@@ -18,7 +20,11 @@ class Service
         $this->fields = $fields;
         $this->id = $id;
         $this->title = $title;
-        $this->picture_url = $picture_url;
+        if (@file_get_contents($picture_url, 0, NULL, 0, 1)) {
+            $this->picture_url = $picture_url;
+        } else {
+            $this->picture_url = '/images/no_data.jpg';
+        }
         return $this;
     }
 
@@ -27,17 +33,15 @@ class Service
         if (!$id) {
             $response = CoreProxy::getService($page, $id, $categoryId);
             $this->pageCount = $response->headers->get('x-pagination-page-count');
+            $this->totalCount = $response->headers->get('X-Pagination-Total-Count');
             $response = json_decode($response->content, true);
             $services = [];
             foreach ($response as $service) {
-                if ($service['is_simple']) {
-                    $service = new Service($service['id'], $service['title'], $service['picture_url']);
-                    array_push($services, $service);
-                }
+                $service = new Service($service['id'], $service['title'], $service['picture_url']);
+                array_push($services, $service);
             }
             return $services;
-        }
-        else{
+        } else{
             $response = CoreProxy::getService($page, $id, $categoryId);
             $response = json_decode($response->content, true);
             $service = new Service($response['id'], $response['title'], $response['picture_url'], $response['fields']);

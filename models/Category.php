@@ -5,6 +5,7 @@ namespace app\models;
 
 
 use app\components\CoreProxy;
+use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use yii\base\Model;
 
 class Category extends Model
@@ -17,7 +18,11 @@ class Category extends Model
     {
         $this->id = $id;
         $this->title = $title;
-        $this->picture_url = $picture_url;
+        if (@file_get_contents($picture_url, 0, NULL, 0, 1)) {
+            $this->picture_url = $picture_url;
+        } else {
+            $this->picture_url = '/images/no.jpg';
+        }
         return $this;
     }
 
@@ -29,6 +34,9 @@ class Category extends Model
         foreach ($response as $category){
             $category = new Category($category['id'], $category['title'], $category['picture_url']);
             array_push($categories, $category);
+        }
+        if ( empty($categories) ) {
+            throw new InternalErrorException('Невозможно отобразить категории, попробуйте позже.', 500);
         }
         return $categories;
     }

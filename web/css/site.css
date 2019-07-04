@@ -113,3 +113,31 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+
+
+.super-btn {
+
+    margin-left: 20px;
+    border-radius: 30px;
+    border: 2px solid antiquewhite;
+    background-color: orange;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    color: white;
+    box-shadow: 0 8px 16px 0 rgba(0,40,120,.35);
+    transition: .5s;
+    text-align: center;
+    width: 250px;
+    height: auto;
+}
+.super-btn:hover {
+    box-shadow: 0 0 0 0 rgba(0,40,120,0);
+    background-color: dodgerblue; /*linear-gradient(45deg, #6ab1d7 0%, #33d9de 50%, #002878 100%);*/
+    background-position: 0 0;
+}
+
+.active-menu {
+    background-color: dodgerblue; /*linear-gradient(45deg, #6ab1d7 0%, #33d9de 50%, #002878 100%);*/
+    background-position: 0 0;
+}

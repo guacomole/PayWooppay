@@ -6,10 +6,10 @@ use yii\widgets\MaskedInput;
 
 ?>
 <div class="form-div">
-    <?php echo "<h1 ><br><em>Авторизация</em><br></h1>" ?>
-    <?php if ( Yii::$app->session->hasFlash('error') ): ?>
+    <?php echo "<h3><br><em>Авторизация</em><br></h3>" ?>
+    <?php if ( Yii::$app->session->hasFlash('error')): ?>
         <?php
-        debug(Yii::$app->session->getFlash('error'));
+        echo Html::tag('h5', Yii::$app->session->getFlash('error'));
         ?>
     <?php endif; ?>
     <?php $form = ActiveForm::begin(['options' => ['id' => 'Form'], 'action' => ['site/auth'],

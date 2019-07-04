@@ -41,22 +41,22 @@ class CoreProxy
     {
         $headers = ['Authorization' => Yii::$app->session['token']];
         if ($category_id and $page){
-            $url = substr(Url::to([self::SERVICE_URL, 'category_id' => $category_id, 'page' => $page]), 1);
+            $url = substr(Url::to([self::SERVICE_URL, 'category_id' => $category_id, 'page' => $page, 'template' => '']), 1);
         }
         elseif ($id) {
             $url = substr(Url::to([self::SERVICE_URL . '/' . $id, 'expand' => 'fields.validations']), 1);
         }
         elseif ($page){
-            $url = substr(Url::to([self::SERVICE_URL, 'page' => $page]), 1);
+            $url = substr(Url::to([self::SERVICE_URL, 'page' => $page, 'template' => '']), 1);
         }
         elseif ($category_id){
-            $url = substr(Url::to([self::SERVICE_URL, 'category_id' => $category_id]), 1);
+            $url = substr(Url::to([self::SERVICE_URL, 'category_id' => $category_id, 'template' => '']), 1);
         }
         elseif ($category_id and $page){
-            $url = substr(Url::to([self::SERVICE_URL, 'category_id' => $category_id, 'page' => $page]), 1);
+            $url = substr(Url::to([self::SERVICE_URL, 'template' => '', 'category_id' => $category_id, 'page' => $page]), 1);
         }
         else {
-            $url = self::SERVICE_URL;
+            $url = self::SERVICE_URL . '?template=';
         }
         $response = RestClient::get($url, $body = [], $headers);
         return $response;
