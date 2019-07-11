@@ -19,12 +19,13 @@ class CoreProxy
     const PAYMENT_URL = 'https://api.yii2-stage.test.wooppay.com/v1/payment/pay-from-wallet';
     const GET_CHECK_URL = 'https://api.yii2-stage.test.wooppay.com/v1/history/receipt';
     const PRINT_CHECK_URL = 'https://api.yii2-stage.test.wooppay.com/v1/history/receipt/pdf';
+    const GET_BALANCE_URL = 'https://api.yii2-stage.test.wooppay.com/v1/balance';
 
     public static function auth($login, $password)
     {
         $body = [
-          'login' => $login,
-          'password' =>  $password
+            'login' => $login,
+            'password' => $password
         ];
         $response = RestClient::post(self::AUTH_URL, $body);
         return $response;
@@ -34,13 +35,13 @@ class CoreProxy
     {
         $headers = ['Authorization' => Yii::$app->session['token']];
         $per_page = 15;
-        if ($category_id and $page){
-            $url = substr(Url::to([self::SERVICE_URL, 'category_id' => $category_id, 'page' => $page,'per-page' => $per_page, 'template' => '']), 1);
+        if ($category_id and $page) {
+            $url = substr(Url::to([self::SERVICE_URL, 'category_id' => $category_id, 'page' => $page, 'per-page' => $per_page, 'template' => '']), 1);
         } elseif ($id) {
             $url = substr(Url::to([self::SERVICE_URL . '/' . $id, 'expand' => 'fields.validations']), 1);
-        } elseif ($page){
-            $url = substr(Url::to([self::SERVICE_URL, 'page' => $page, 'per-page' => $per_page,'template' => '']), 1);
-        } elseif ($category_id){
+        } elseif ($page) {
+            $url = substr(Url::to([self::SERVICE_URL, 'page' => $page, 'per-page' => $per_page, 'template' => '']), 1);
+        } elseif ($category_id) {
             $url = substr(Url::to([self::SERVICE_URL, 'category_id' => $category_id, 'per-page' => $per_page, 'template' => '']), 1);
         } else {
             $url = self::SERVICE_URL . '?template=' . "&per-page=$per_page";
@@ -49,7 +50,8 @@ class CoreProxy
         return $response;
     }
 
-    public static function getCommission($id, $amount){
+    public static function getCommission($id, $amount)
+    {
         $headers = ['Authorization' => Yii::$app->session['token']];
         $url = self::GET_COMMISSION_URL . '/' . $id;
         $body = ['amount' => $amount];
@@ -60,7 +62,7 @@ class CoreProxy
     public static function getCategories($parentId)
     {
         $url = substr(Url::to([self::CATEGORY_URL, 'parent_id' => $parentId]), 1);
-        $response = RestClient::get($url, $body =[]);
+        $response = RestClient::get($url, $body = []);
         return $response;
     }
 
@@ -81,14 +83,21 @@ class CoreProxy
     public static function getBankCheck($id)
     {
         $headers = ['Authorization' => Yii::$app->session['token']];
-        $response = RestClient::get(self::GET_CHECK_URL . '/' . $id , $body = [], $headers);
+        $response = RestClient::get(self::GET_CHECK_URL . '/' . $id, $body = [], $headers);
         return $response;
     }
 
     public static function getCheckInPDF($id)
     {
         $headers = ['Authorization' => Yii::$app->session['token'],];
-        $response = RestClient::get(self::PRINT_CHECK_URL . '/' . $id , $body = [], $headers);
+        $response = RestClient::get(self::PRINT_CHECK_URL . '/' . $id, $body = [], $headers);
+        return $response;
+    }
+
+    public static function getBalance()
+    {
+        $headers = ['Authorization' => Yii::$app->session['token'],];
+        $response = RestClient::get(self::GET_BALANCE_URL, $body = [], $headers);
         return $response;
     }
 }

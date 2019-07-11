@@ -33,7 +33,8 @@ AppAsset::register($this);
                 </ul>
                 <div class="navbar-right" style="margin-right:50px; color:white;">
                     <p class="navbar-text" style="margin-right: 50px; color:white; font-size:16px;"><b>Ваш номер:  <?php echo Yii::$app->session['phone']; ?></b></p>
-                <?= Html::a('Выйти', ['site/logout'],
+                    <p class="navbar-text" style="margin-right: 50px; color:white; font-size:16px;"><b>Баланс: <?php echo Yii::$app->session['balance']; ?> тг </b></p>
+                    <?= Html::a('Выйти', ['site/logout'],
                     ['class' => ' navbar-btn btn btn-danger navbar-right'])
                 ?>
                 </div>

@@ -42,7 +42,7 @@ class Check extends Model
     {
         $response = CoreProxy::getBankCheck($operation_id);
         $response = json_decode($response->content, true);
-        $response['transaction']['status'] = 11;
+        //$response['transaction']['status'] = 11;
         if ($response['transaction']['status'] == 14) {
             $this->checkInPDF = CoreProxy::getCheckInPDF($operation_id)->content;
             return $response;

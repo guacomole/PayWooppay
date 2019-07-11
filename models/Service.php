@@ -8,7 +8,6 @@ use app\components\CoreProxy;
 
 class Service
 {
-    public $pageCount;
     public $totalCount;
     public $fields;
     public $id;
@@ -32,7 +31,6 @@ class Service
     {
         if (!$id) {
             $response = CoreProxy::getService($page, $id, $categoryId);
-            $this->pageCount = $response->headers->get('x-pagination-page-count');
             $this->totalCount = $response->headers->get('X-Pagination-Total-Count');
             $response = json_decode($response->content, true);
             $services = [];

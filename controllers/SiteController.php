@@ -28,23 +28,7 @@ class SiteController extends BehaviorsController
             return $this->render('error', ['exception' => $exception]);
         }
     }
-    /*public function actions()
-    {
-        $exception = Yii::$app->errorHandler->exception;
-        if ($exception == null){
-            $this->layout = 'basic';
-            return [
-                'error' => [
-                    'class' => 'yii\web\ErrorAction',
-                ],
-            ];
-        } elseif ($exception->getCode() == 401) {
-            Yii::$app->session->setFlash('error',
-                'Авторизуйтесь, если у вас есть кошелёк, или создайте его на <a href="https://www.wooppay.com/services">wooppay.kz</a>');
-            return $this->redirect(['site/auth']);
-        }
 
-    }*/
     public function actionAuth()
     {
         $this->layout = 'basic';

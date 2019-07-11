@@ -4,7 +4,7 @@
 namespace app\controllers;
 
 
-use yii\filters\VerbFilter;
+use app\models\Profile;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use Yii;
@@ -31,6 +31,8 @@ class BehaviorsController extends Controller
                         'actions' => ['service', 'category', 'payment', 'logout', 'check'],
                         'matchCallback' => function($rule, $action){
                             if ( isset(Yii::$app->session['token']) and Yii::$app->session['token']){
+                                $balance = Profile::getBalance();
+                                Yii::$app->session['balance'] = $balance;
                                 return true;
                             } else {
                                 Yii::$app->session->setFlash('error',
@@ -44,4 +46,11 @@ class BehaviorsController extends Controller
             ],
         ];
     }
+    /*public function afterAction($action, $result)
+    {
+        $balance = Profile::getBalance();
+        Yii::$app->session['balance'] = $balance;
+        return parent::afterAction($action, $result);
+    }*/
+
 }

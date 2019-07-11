@@ -1,8 +1,11 @@
 <?php
+
 use yii\helpers\Html;
-debug($post);
+use yii\helpers\Url;
+use yii\widgets\ActiveForm;
+
 ?>
-<?php if( /* isset($check) and $check->checkInPDF */ false): ?>
+<?php if( isset($check) and $check->checkInPDF): ?>
 <?php file_put_contents('check.pdf', $check->checkInPDF);  ?>
     <img src="/images/check-success.png" width="150px" height="150px" class="center-block" alt="Оплата проведена успешно.">
     <br>
@@ -32,7 +35,6 @@ debug($post);
             objFra.contentWindow.print();      // Print it.
         }
     </script>
-
 <?php elseif( isset($check) and $check->operation_id): ?>
     <img src="/images/crash.jpg" width="150px" height="150px" class="center-block" alt="Ошибка...">
     <br>
@@ -42,24 +44,14 @@ debug($post);
         Или запросите чек ещё раз <br>
         Круглосуточная служба поддержки: +7 771 015 15 15 <br>
     </h3>
-    <?php echo Html::a('Запросить чек', ['check'], [
-        'class'=>'btn btn-info',
-        'data'=>[
-            'method'=>'post',
-            'params'=>[
-                'operation_id'=> 'value',
-    ],
-    ]
-    ]); ?>​
-    <?php echo Html::a('Ссылка', ['/payment/check'], [
-        'data' => [
-            'method' => 'post',
-            'params' => [
-                'param1' => 'value1',
-                'param2' => 'value2',
-            ],
-        ],
-    ]); ?>
-
+    <?php
+    $form = ActiveForm::begin( [
+        'options' => ['id' => 'getOperationForm'],
+        'action' => [ Url::to(['check']) ]
+    ]);
+    echo $form->field($model, 'operation_id')->hiddenInput(['value'=> $check->operation_id])->label(false),
+         Html::submitButton('Запросить чек', ['class' => 'btn btn-info']);
+    ActiveForm::end();
+    ?>
 <?php endif; ?>
 
