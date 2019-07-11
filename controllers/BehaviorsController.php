@@ -28,7 +28,7 @@ class BehaviorsController extends Controller
                     [
                         'allow' => true,
                         'controllers' => ['payment', 'site'],
-                        'actions' => ['service', 'category', 'payment', 'logout', 'check'],
+                        'actions' => ['service', 'category', 'payment', 'logout', 'check', 'pay'],
                         'matchCallback' => function($rule, $action){
                             if ( isset(Yii::$app->session['token']) and Yii::$app->session['token']){
                                 $balance = Profile::getBalance();
@@ -46,11 +46,4 @@ class BehaviorsController extends Controller
             ],
         ];
     }
-    /*public function afterAction($action, $result)
-    {
-        $balance = Profile::getBalance();
-        Yii::$app->session['balance'] = $balance;
-        return parent::afterAction($action, $result);
-    }*/
-
 }

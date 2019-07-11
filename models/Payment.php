@@ -24,8 +24,11 @@ class Payment extends DynamicModel
             }
             $response = CoreProxy::paymentValidate($body);
             $this->commission = json_decode(CoreProxy::getCommission(Yii::$app->session['idPayment'], $this->amount), true);
-            $this->commission ? null : $this->commission = 0;
+            $this->commission ? $this->commission : $this->commission = 0;
             $this->total_sum = $this->commission + $this->amount;
+            if ($this->total_sum > Yii::$app->session['balance']) {
+                throw new BadPayException('Невозможно произвести платёж. Недостаточно средств на счету.');
+            }
             $body = json_decode($response->content, true);
             Yii::$app->session->setFlash('body', $body);
         } catch (UnprocessableEntityHttpException $e){
@@ -33,7 +36,7 @@ class Payment extends DynamicModel
             if (in_array($error[0]['field'], $this->attrs)) {
                 $this->addErrors([$error[0]['field'] => $error[0]['message']]);
             } else {
-                throw new BadPayException('Невозможно произвести платёж. Попробуйте позже.');
+                throw new BadPayException('Невозможно произвести платёж, технические неполадки. Попробуйте позже.');
             }
             return false;
         }

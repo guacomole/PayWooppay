@@ -14,8 +14,8 @@ use yii\helpers\Url;
     echo Html::img($paymentModel->picture_url, ['class' => 'image']),
     '<br>',
     Html::tag('h4', $paymentModel->service_title, ['style' => 'text-align:center']);
-    if ( isset($error) ){
-        echo Html::tag('h5', $error, ['style' => 'text-align:center; color:red']);
+    if ( Yii::$app->session->hasFlash('error') ){
+        echo Html::tag('h5', Yii::$app->session->getFlash('error'), ['style' => 'text-align:center; color:red']);
     }
     foreach($paymentModel->attrs as $name)  //вывод полей
     {

@@ -62,7 +62,8 @@ $config = [
                     'category' => 'payment/category',
                     'service' => 'payment/service',
                     'payment' => 'payment/payment',
-                    'check' => 'payment/check'
+                    'check' => 'payment/check',
+                    '' => 'payment/category',
             ],
         ],
 

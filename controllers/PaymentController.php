@@ -12,7 +12,7 @@ use app\myExceptions\BadPayException;
 use yii\data\Pagination;
 use app\models\Payment;
 use app\models\Check;
-use app\models\Profile;
+
 
 class PaymentController extends BehaviorsController
 {
@@ -56,33 +56,43 @@ class PaymentController extends BehaviorsController
             }
             return $this->render('payment', compact('paymentModel'));
         } catch (BadPayException $e) {
-            $error = $e->getMessage();//'Невозможно произвести платёж. Попробуйте позже.';
-            return $this->render('payment', compact('paymentModel', 'error'));
+            //$error = $e->getMessage();//'Невозможно произвести платёж. Попробуйте позже.';
+            Yii::$app->session->setFlash('error', $e->getMessage());
+            return $this->render('payment', compact('paymentModel'));
         }
     }
 
-
+    public function actionPay()
+    {
+        try {
+            if (Yii::$app->session->hasFlash('body')) {
+                $operation_id = Payment::pay(Yii::$app->session->getFlash('body'));
+                Yii::$app->session->setFlash('operation_id', $operation_id);
+                return $this->redirect(['check']);
+            } else {
+                return $this->redirect(['category']);
+            }
+        } catch(BadPayException $e){
+            Yii::$app->session->setFlash('error', $e->getMessage());
+            return $this->redirect(['payment', 'id' => Yii::$app->session['idPayment']]);
+        }
+    }
     public function actionCheck()
     {
         try {
             $this->view->title = 'Чек';
             $model = new CheckForm();
-            if (Yii::$app->request->isPost) { //повторный запрос чека
-                if ($model->load(Yii::$app->request->post())) {
-                    $operation_id = $model->operation_id;
-                }
-            } elseif (Yii::$app->session->hasFlash('body')) {
-                $operation_id = Payment::pay(Yii::$app->session->getFlash('body'));
-                $balance = Profile::getBalance();
-                Yii::$app->session['balance'] = $balance;
+            if (Yii::$app->session->hasFlash('operation_id')) { //впервые получаем чек
+                $operation_id = Yii::$app->session->getFlash('operation_id');
+            } elseif ( Yii::$app->request->isPost and $model->load(Yii::$app->request->post()) ) { //повторный запрос чека
+                $operation_id = $model->operation_id;
             } else {
-                return $this->redirect(['service']);
+                return $this->redirect(['category']);
             }
             $check = new Check($operation_id);
             return $this->render('check', compact('check', 'model'));
-        }catch (BadPayException $e){
-            $error = $e->getMessage();
-            Yii::$app->session->setFlash('error', $error);
+        } catch (BadPayException $e){
+            Yii::$app->session->setFlash('error', $e->getMessage());
             return $this->redirect(['payment', 'id' => Yii::$app->session['idPayment']]);
         }
     }
