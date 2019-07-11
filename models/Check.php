@@ -42,13 +42,14 @@ class Check extends Model
     {
         $response = CoreProxy::getBankCheck($operation_id);
         $response = json_decode($response->content, true);
+        $response['transaction']['status'] = 11;
         if ($response['transaction']['status'] == 14) {
             $this->checkInPDF = CoreProxy::getCheckInPDF($operation_id)->content;
             return $response;
         } elseif ($response['transaction']['status'] == 11) {
             sleep(3);
         } else {
-            throw new BadPayException('Bad status of payment');
+            throw new BadPayException('Невозможно произвести платёж, попробуйте позже.');
         }
         if ( $bad_operation ) return false;
         return $this->getBankCheck($operation_id, true);

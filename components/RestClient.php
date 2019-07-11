@@ -7,9 +7,9 @@ namespace app\components;
 use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use yii\httpclient\Client;
 use yii\httpclient\Exception;
-use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
+use yii\web\UnauthorizedHttpException;
 use yii\web\UnprocessableEntityHttpException;
 
 class RestClient
@@ -41,7 +41,6 @@ class RestClient
     {
         try{
             $response = $request->send();
-            Yii::$app->session['response'] = $response->getStatusCode();
         } catch (Exception $e){
             throw new InternalErrorException('Непредвиденные технические проблемы. Пожалуйста, попробуйте позже.', 500);
         }
@@ -50,6 +49,8 @@ class RestClient
                 throw new UnprocessableEntityHttpException($response->content);
             } elseif ( $response->getStatusCode() == 404) {
                 throw new NotFoundHttpException($response->content);
+            } elseif( $response->getStatusCode() == 401 ) {
+                throw new UnauthorizedHttpException($response->content);
             } else {
                 throw new ServerErrorHttpException($response);
             }

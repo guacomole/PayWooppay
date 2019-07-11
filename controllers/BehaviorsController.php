@@ -3,12 +3,10 @@
 
 namespace app\controllers;
 
-use Symfony\Component\CssSelector\Exception\InternalErrorException;
-use yii\httpclient\Exception;
+
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\filters\AccessControl;
-use app\components\CoreProxy;
-use yii\web\ServerErrorHttpException;
 use Yii;
 
 class BehaviorsController extends Controller
@@ -30,26 +28,18 @@ class BehaviorsController extends Controller
                     [
                         'allow' => true,
                         'controllers' => ['payment', 'site'],
-                        'actions' => ['service', 'category', 'payment', 'logout'],
+                        'actions' => ['service', 'category', 'payment', 'logout', 'check'],
                         'matchCallback' => function($rule, $action){
-                            try {
-                                return CoreProxy::isAuth();
-                            }
-                            catch (InternalErrorException $e){
-                                Yii::$app->session->setFlash('error', $e->getMessage());
-                                return false;
-                            }
-                            catch (ServerErrorHttpException $e){
+                            if ( isset(Yii::$app->session['token']) and Yii::$app->session['token']){
+                                return true;
+                            } else {
                                 Yii::$app->session->setFlash('error',
-                                    'Авторизуйтесь, если у вас есть кошелёк, или создайте его на <a href="https://www.wooppay.com/services">wooppay.kz</a>');
-                                return false;
-                            }
-                            catch (Exception $e) {
-                                Yii::$app->session->setFlash('error', $e->getMessage());
+                                   'Авторизуйтесь, если у вас есть кошелёк, или создайте его на <a href="https://www.wooppay.com/services">wooppay.kz</a>');
                                 return false;
                             }
                         }
                     ],
+
                 ],
             ],
         ];

@@ -61,7 +61,8 @@ $config = [
                     'auth' => 'site/auth',
                     'category' => 'payment/category',
                     'service' => 'payment/service',
-                    'payment' => 'payment/payment'
+                    'payment' => 'payment/payment',
+                    'check' => 'payment/check'
             ],
         ],
 

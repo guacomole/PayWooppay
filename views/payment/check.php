@@ -1,4 +1,8 @@
-<?php if( isset($check) and $check->checkInPDF ): ?>
+<?php
+use yii\helpers\Html;
+debug($post);
+?>
+<?php if( /* isset($check) and $check->checkInPDF */ false): ?>
 <?php file_put_contents('check.pdf', $check->checkInPDF);  ?>
     <img src="/images/check-success.png" width="150px" height="150px" class="center-block" alt="Оплата проведена успешно.">
     <br>
@@ -29,13 +33,33 @@
         }
     </script>
 
-<?php elseif( isset($check) and $check->operation_id  ): ?>
+<?php elseif( isset($check) and $check->operation_id): ?>
     <img src="/images/crash.jpg" width="150px" height="150px" class="center-block" alt="Ошибка...">
     <br>
     <h2 class="text-center">Извините <br> </h2>
     <h3 class="text-center">
         Превышено время ожидания операции. Обратитесь в техподдержку, ваш номер операции <?php echo $check->operation_id; ?> <br>
-        Круглосуточная служба поддержки: +7 771 015 15 15
+        Или запросите чек ещё раз <br>
+        Круглосуточная служба поддержки: +7 771 015 15 15 <br>
     </h3>
+    <?php echo Html::a('Запросить чек', ['check'], [
+        'class'=>'btn btn-info',
+        'data'=>[
+            'method'=>'post',
+            'params'=>[
+                'operation_id'=> 'value',
+    ],
+    ]
+    ]); ?>​
+    <?php echo Html::a('Ссылка', ['/payment/check'], [
+        'data' => [
+            'method' => 'post',
+            'params' => [
+                'param1' => 'value1',
+                'param2' => 'value2',
+            ],
+        ],
+    ]); ?>
 
 <?php endif; ?>
+

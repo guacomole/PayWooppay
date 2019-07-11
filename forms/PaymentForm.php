@@ -19,12 +19,12 @@ class PaymentForm extends Payment
 
     public function __construct($id)
     {
-
-            $service = new Service();
-            $service = $service->find(null, $id);
-            $this->service_title = $service->title;
-            $this->picture_url = $service->picture_url;
-        try {   $this->getHtmlRules($service->fields);
+        $service = new Service();
+        $service = $service->find(null, $id);
+        $this->service_title = $service->title;
+        $this->picture_url = $service->picture_url;
+        try {
+            $this->getHtmlRules($service->fields);
             $this->getRules($service->fields);
             return $this;
         } catch (\Exception $e) {

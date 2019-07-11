@@ -4,10 +4,9 @@
 namespace app\components;
 
 
-use http\Client;
 use Yii;
 use yii\helpers\Url;
-use yii\web\ServerErrorHttpException;
+
 
 class CoreProxy
 {
@@ -16,6 +15,7 @@ class CoreProxy
     const SERVICE_URL = 'https://api.yii2-stage.test.wooppay.com/v1/service';
     const CATEGORY_URL = 'https://api.yii2-stage.test.wooppay.com/v1/service-category';
     const PAYMENT_VALIDATION_URL = 'https://api.yii2-stage.test.wooppay.com/v1/payment/check';
+    const GET_COMMISSION_URL = 'https://api.yii2-stage.test.wooppay.com/v1/service/commission';
     const PAYMENT_URL = 'https://api.yii2-stage.test.wooppay.com/v1/payment/pay-from-wallet';
     const GET_CHECK_URL = 'https://api.yii2-stage.test.wooppay.com/v1/history/receipt';
     const PRINT_CHECK_URL = 'https://api.yii2-stage.test.wooppay.com/v1/history/receipt/pdf';
@@ -27,13 +27,6 @@ class CoreProxy
           'password' =>  $password
         ];
         $response = RestClient::post(self::AUTH_URL, $body);
-        return $response;
-    }
-
-    public static function isAuth()
-    {
-        $headers = ['Authorization' => Yii::$app->session['token']];
-        $response = RestClient::get(self::AUTH_URL, $body = [], $headers);
         return $response;
     }
 
@@ -53,6 +46,14 @@ class CoreProxy
             $url = self::SERVICE_URL . '?template=' . "&per-page=$per_page";
         }
         $response = RestClient::get($url, $body = [], $headers);
+        return $response;
+    }
+
+    public static function getCommission($id, $amount){
+        $headers = ['Authorization' => Yii::$app->session['token']];
+        $url = self::GET_COMMISSION_URL . '/' . $id;
+        $body = ['amount' => $amount];
+        $response = RestClient::post($url, $body, $headers);
         return $response;
     }
 
@@ -76,12 +77,14 @@ class CoreProxy
         $response = RestClient::post(self::PAYMENT_URL, $body, $headers);
         return $response;
     }
+
     public static function getBankCheck($id)
     {
         $headers = ['Authorization' => Yii::$app->session['token']];
         $response = RestClient::get(self::GET_CHECK_URL . '/' . $id , $body = [], $headers);
         return $response;
     }
+
     public static function getCheckInPDF($id)
     {
         $headers = ['Authorization' => Yii::$app->session['token'],];

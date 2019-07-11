@@ -9,7 +9,7 @@ use yii\widgets\MaskedInput;
 <?php $form = ActiveForm::begin(['options' => ['id' => 'Form', 'class' => 'form-div center-block'], 'action' => ['site/auth'], ]) ?>
 <?php echo Html::img('/images/wooppay.png', ['class' => 'image']),
 '<br>',
-Html::tag('h4', 'Вход в Wooppay кошелёк'); ?>
+Html::tag('h4', 'Вход в Wooppay кошелёк', ['style' => 'text-align:center;']); ?>
 <?php if ( Yii::$app->session->hasFlash('error')) {
     echo Html::tag('h5', Yii::$app->session->getFlash('error'));
 }

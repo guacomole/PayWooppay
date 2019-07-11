@@ -5,17 +5,15 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 ?>
 
-<?php if ( isset($error) ){
-    debug($error);
-} ?>
 <?php if ( isset($paymentModel) ): ?>
-<!--<div class="form-div">-->
     <?php
-
-    $form = ActiveForm::begin( ['options' => ['id' => 'PaymentForm', 'class' => 'form-div center-block'], 'action' => [ Url::to(['payment', 'id' => Yii::$app->session['idPayment']]) ] ]);
+    $form = ActiveForm::begin( [
+        'options' => ['id' => 'PaymentForm', 'class' => 'form-div center-block'],
+        'action' => [ Url::to(['payment', 'id' => Yii::$app->session['idPayment']]) ]
+    ]);
     echo Html::img($paymentModel->picture_url, ['class' => 'image']),
     '<br>',
-    Html::tag('h4', $paymentModel->service_title);
+    Html::tag('h4', $paymentModel->service_title, ['style' => 'text-align:center']);
     if ( isset($error) ){
         echo Html::tag('h5', $error, ['style' => 'text-align:center; color:red']);
     }
@@ -34,5 +32,4 @@ use yii\helpers\Url;
         echo Html::submitButton('Оплатить', ['class' => 'btn btn-primary']);
         ActiveForm::end();
         ?>
-<!--</div>-->
 <?php endif; ?>

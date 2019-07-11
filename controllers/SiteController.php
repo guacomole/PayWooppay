@@ -16,20 +16,39 @@ class SiteController extends BehaviorsController
 {
     public $layout = 'inside';
 
-    public function actions()
+    public function actionError()
     {
-        $this->layout = 'basic';
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-            // ...
-        ];
+        $exception = Yii::$app->errorHandler->exception;
+        if ($exception != null and $exception->statusCode == 401) {
+            Yii::$app->session->setFlash('error',
+                'Авторизуйтесь, если у вас есть кошелёк, или создайте его на <a href="https://www.wooppay.com/services">wooppay.kz</a>');
+            return $this->redirect(['site/auth']);
+        } else {
+            $this->layout = 'basic';
+            return $this->render('error', ['exception' => $exception]);
+        }
     }
+    /*public function actions()
+    {
+        $exception = Yii::$app->errorHandler->exception;
+        if ($exception == null){
+            $this->layout = 'basic';
+            return [
+                'error' => [
+                    'class' => 'yii\web\ErrorAction',
+                ],
+            ];
+        } elseif ($exception->getCode() == 401) {
+            Yii::$app->session->setFlash('error',
+                'Авторизуйтесь, если у вас есть кошелёк, или создайте его на <a href="https://www.wooppay.com/services">wooppay.kz</a>');
+            return $this->redirect(['site/auth']);
+        }
+
+    }*/
     public function actionAuth()
     {
         $this->layout = 'basic';
-        $this->view->title = 'Авторизация!';
+        $this->view->title = 'Вход';
         $model = new LoginForm();
         if ( Yii::$app->request->isPost ) {
             if ($model->load(Yii::$app->request->post()) and $model->validate()) {
@@ -42,6 +61,8 @@ class SiteController extends BehaviorsController
     public function actionLogout()
     {
         Yii::$app->session->destroy();
+        Yii::$app->session->setFlash('error', 'Авторизуйтесь, если у вас есть кошелёк, или создайте его на 
+                    <a href="https://www.wooppay.com/services">wooppay.kz</a>');
         return $this->redirect(Url::to(['auth']));
     }
 
